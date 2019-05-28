@@ -1,0 +1,7 @@
+#Exclude all folders except Scripts
+Templates/
+Test_Input/
+Test_Output/
+
+#Exclude Python Cache folders
+**/__pycache__

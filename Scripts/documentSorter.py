@@ -5,39 +5,44 @@ log = logging.getLogger(__name__)
 
 from pathlib import Path
 import docx
+import documentClass
 
-def sort(in_path, out_path, categories, forbidden_chars, delete_input):
+def sort(in_path, out_path, categories, categories_dictionary, forbidden_chars, delete_input):
     for category in categories:
         out_path.joinpath(category).mkdir(exist_ok=True)
 
     for file in in_path.iterdir():
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
-            doc_dictionary = getText(str(file), forbidden_chars)
+            document_data = getDocumentData(str(file), forbidden_chars, categories_dictionary)
 
-            version = doc_dictionary["version"]
-            log.info("Document uses V{}".format(version))
+            if document_data.template_version != 0:
+                log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
 
-            if doc_dictionary["Categorie"] in categories:
-                custom_path = out_path.joinpath(doc_dictionary["Categorie"])
+                log.debug("categorie = {}".format(document_data.categorie))
+                if document_data.categorie in categories:
+                    custom_path = out_path.joinpath(document_data.categorie)
+                else:
+                    custom_path = out_path.joinpath("Overig")
+
+                if document_data.titel != "":
+                    new_path = customPath(custom_path, document_data.titel)
+                else:
+                    new_path = customPath(custom_path, file.stem)
+
+                if delete_input == True:
+                    file.rename(new_path)
+                    log.info("File moved to {}".format(new_path))
+                else:
+                    document = docx.Document(str(file))
+                    document.save(str(new_path))
+                    log.info("File copied to {}".format(new_path))
+
             else:
-                custom_path = out_path.joinpath("Overig")
-
-            if doc_dictionary["Titel"] != "":
-                new_path = customPath(custom_path, doc_dictionary["Titel"])
-            else:
-                new_path = customPath(custom_path, file.stem)
-
-            if delete_input == True:
-                file.rename(new_path)
-                log.info("File moved to {}".format(new_path))
-            else:
-                document = docx.Document(str(file))
-                document.save(str(new_path))
-                log.info("File copied to {}".format(new_path))
+                log.debug("File {} does not use a valid template".format(file.stem))
 
 
-def getText(file_path, forbidden_chars):
+def getDocumentData(file_path, forbidden_chars, categories_dictionary):
     try:
         doc = docx.Document(file_path)
     except ValueError:
@@ -57,9 +62,9 @@ def getText(file_path, forbidden_chars):
         for i in range(len(keys)):
             fullText = []
             for paragraph in table.column_cells(1)[i].paragraphs:
-                fullText.append(paragraph.text.replace(";", ""))
+                fullText.append(paragraph.text.replace("\n", ""))
 
-            fullText = ";".join(fullText)
+            fullText = "\n".join(fullText)
 
             data[keys[i]] = fullText
 
@@ -68,11 +73,10 @@ def getText(file_path, forbidden_chars):
         for c in forbidden_chars:
             data["Titel"] = data["Titel"].replace(c, "")
 
-        data["Auteur"] = data["Auteur"].replace(",", ";").replace(', ', ";")
-        data["Speltak(ken)"] = data["Speltak(ken)"].replace(",", ";").replace(', ', ";")
-        data["Zoekwoorden"] = data["Zoekwoorden"].replace(",", ";").replace(', ', ";")
+        data["Speltak(ken)"] = data["Speltak(ken)"].lower()
+        data["Categorie"] = categories_dictionary.get(data["Categorie"].lower(), "Overig")
 
-        return data
+        return documentClass.Document(data)
 
 def customPath(file_path, name):
     already_exists = True

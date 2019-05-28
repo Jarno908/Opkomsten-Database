@@ -44,11 +44,17 @@ class MainModel():
         print("ReadConfig")
 
     def SortDocuments(self, input_path, output_path):
-        categories = self.config["Sorting"]["categories"].split(";")
+        categories = self.config["Sorting"]["categories"].replace("\n", "").split(";")
+        categories_raw = self.config["Sorting"]["categories_dictionary"].replace("\n", "").split(";")
+        category_dictionary = {}
+        for category in categories_raw:
+            entry = category.split(":")
+            category_dictionary[entry[0]] = entry[1]
+
         forbidden_chars = self.config["Sorting"]["forbidden_characters"]
         delete_input = self.config["Sorting"].getboolean("delete_input")
 
-        documentSorter.sort(input_path, output_path, categories, forbidden_chars, delete_input)
+        documentSorter.sort(input_path, output_path, categories, category_dictionary, forbidden_chars, delete_input)
 
 if __name__ == "__main__":
     model = MainModel()

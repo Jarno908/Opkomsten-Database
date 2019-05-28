@@ -6,9 +6,10 @@ log = logging.getLogger(__name__)
 from pathlib import Path
 import docx
 
-#file = Path(".").resolve().parent.joinpath("Templates", "Opkomst Template V01.docx")
+file = Path(".").resolve().parent.joinpath("Templates", "Opkomst Template V01.docx")
+#file = Path(".").resolve().parent.joinpath("Test_Input", "Test_Smurfen.docx")
 
-versionNumber = "01"
+versionNumber = "O001"
 author = "Jarno Vos"
 
 def changeProperties(filePath, version, name):
@@ -28,5 +29,5 @@ def changeProperties(filePath, version, name):
         log.info("Version = " + doc.core_properties.version)
         log.info("Author = " + doc.core_properties.author)
 
-changeProperties(str(file), versionNumber, author)
+#changeProperties(str(file), versionNumber, author)
 print("Done")
