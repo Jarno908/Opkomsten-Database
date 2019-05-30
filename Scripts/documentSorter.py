@@ -9,7 +9,7 @@ import documentClass
 
 def sort(in_path, out_path, categories, categories_dictionary, forbidden_chars, delete_input):
     for category in categories:
-        out_path.joinpath(category).mkdir(exist_ok=True)
+        out_path.joinpath("Opkomst", category).mkdir(parents = True, exist_ok=True)
 
     for file in in_path.iterdir():
         if file.suffix == ".docx":
@@ -19,11 +19,12 @@ def sort(in_path, out_path, categories, categories_dictionary, forbidden_chars, 
             if document_data.template_version != 0:
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
 
-                log.debug("categorie = {}".format(document_data.categorie))
+                custom_path = out_path.joinpath(document_data.document_type)
+
                 if document_data.categorie in categories:
-                    custom_path = out_path.joinpath(document_data.categorie)
+                    custom_path = custom_path.joinpath(document_data.categorie)
                 else:
-                    custom_path = out_path.joinpath("Overig")
+                    custom_path = custom_path.joinpath("Overig")
 
                 if document_data.titel != "":
                     new_path = customPath(custom_path, document_data.titel)
@@ -74,6 +75,8 @@ def getDocumentData(file_path, forbidden_chars, categories_dictionary):
             data["Titel"] = data["Titel"].replace(c, "")
 
         data["Speltak(ken)"] = data["Speltak(ken)"].lower()
+        data["Materiaal"] = data["Materiaal"].lower()
+        data["Zoekwoorden"] = data["Zoekwoorden"].lower()
         data["Categorie"] = categories_dictionary.get(data["Categorie"].lower(), "Overig")
 
         return documentClass.Document(data)
