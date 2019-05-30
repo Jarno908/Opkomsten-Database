@@ -3,7 +3,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
-DOCUMENT_TYPES = {"O":"Opkomst"}
+import constants
 
 class Document():
 
@@ -19,13 +19,25 @@ class Document():
     template_version = 0
 
     def __init__(self, doc_dictionary):
+        self.titel = ""
+        self.auteurs = []
+        self.datum = ""
+        self.speltakken = []
+        self.categorie = ""
+        self.omschrijving = ""
+        self.materiaal = []
+        self.zoekwoorden = []
+        self.document_type = ""
+        self.emplate_version = 0
+
         if len(doc_dictionary["version"]) == 4:
-            self.document_type = DOCUMENT_TYPES.get(doc_dictionary["version"][0])
+            self.document_type = constants.DOCUMENT_TYPES.get(doc_dictionary["version"][0])
             self.template_version = int(doc_dictionary["version"][1:])
 
             if self.document_type == "Opkomst":
                 self.init_Opkomst(doc_dictionary)
 
+        # Voor als het een Opkomst-document is
     def init_Opkomst(self, doc_dictionary):
         self.titel = doc_dictionary["Titel"].strip()
 
@@ -37,9 +49,9 @@ class Document():
 
         groups = doc_dictionary["Speltak(ken)"].split(",")
         for group in groups:
-            self.speltakken.append(group.strip())
+            self.speltakken.append(constants.SPELTAKKEN_DICTIONARY.get(group.strip(), "Overig"))
 
-        self.categorie = doc_dictionary["Categorie"]
+        self.categorie = constants.CATEGORIES_DICTIONARY.get(doc_dictionary["Categorie"], "Overig")
 
         self.omschrijving = doc_dictionary["Omschrijving"]
 

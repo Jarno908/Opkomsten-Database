@@ -12,12 +12,13 @@ import documentSorter
 class MainModel():
 
     default_config_path = Path(".").resolve().joinpath("default_config.ini")
-    personal_config_path = Path().home().joinpath("ScoutingOpkomstenDatabaseApp", "personal_config.ini")
+    personal_config_path = Path().home().joinpath("ScoutingDocumentenApp", "personal_config.ini")
     config = configparser.RawConfigParser()
 
     def __init__(self):
         self.innit_config()
 
+        # Voor het aanmaken en update van de config file
     def innit_config(self):
         log.info("Personal configpath is {}".format(self.personal_config_path))
         if self.personal_config_path.exists() == False:
@@ -44,17 +45,8 @@ class MainModel():
         print("ReadConfig")
 
     def SortDocuments(self, input_path, output_path):
-        categories = self.config["Sorting"]["categories"].replace("\n", "").split(";")
-        categories_raw = self.config["Sorting"]["categories_dictionary"].replace("\n", "").split(";")
-        category_dictionary = {}
-        for category in categories_raw:
-            entry = category.split(":")
-            category_dictionary[entry[0]] = entry[1]
-
-        forbidden_chars = self.config["Sorting"]["forbidden_characters"]
         delete_input = self.config["Sorting"].getboolean("delete_input")
-
-        documentSorter.sort(input_path, output_path, categories, category_dictionary, forbidden_chars, delete_input)
+        documentSorter.sort(input_path, output_path, delete_input)
 
 if __name__ == "__main__":
     model = MainModel()

@@ -6,25 +6,26 @@ log = logging.getLogger(__name__)
 from pathlib import Path
 import docx
 import documentClass
+import constants
 
-def sort(in_path, out_path, categories, categories_dictionary, forbidden_chars, delete_input):
-    for category in categories:
-        out_path.joinpath("Opkomst", category).mkdir(parents = True, exist_ok=True)
+# Sorteert de bestanden in de input folder en kopieert/verplaatst de bestanden naar de ouput folder
+def sort(in_path, out_path, delete_input):
+    for speltak in constants.SPELTAKKEN:
+        for category in constants.CATEGORIES:
+            out_path.joinpath("Opkomsten", speltak, category).mkdir(parents = True, exist_ok=True)
 
     for file in in_path.iterdir():
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
-            document_data = getDocumentData(str(file), forbidden_chars, categories_dictionary)
+            document_data = getDocumentData(str(file))
 
             if document_data.template_version != 0:
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
 
-                custom_path = out_path.joinpath(document_data.document_type)
-
-                if document_data.categorie in categories:
-                    custom_path = custom_path.joinpath(document_data.categorie)
+                if document_data.document_type == "Opkomst":
+                    custom_path = opkomstPath(out_path, document_data)
                 else:
-                    custom_path = custom_path.joinpath("Overig")
+                    raise Exception("Not a supported document-type!")
 
                 if document_data.titel != "":
                     new_path = customPath(custom_path, document_data.titel)
@@ -42,8 +43,8 @@ def sort(in_path, out_path, categories, categories_dictionary, forbidden_chars, 
             else:
                 log.debug("File {} does not use a valid template".format(file.stem))
 
-
-def getDocumentData(file_path, forbidden_chars, categories_dictionary):
+# Alle informatie wordt uit het document gehaald en in een Document object gesptopt
+def getDocumentData(file_path):
     try:
         doc = docx.Document(file_path)
     except ValueError:
@@ -71,16 +72,17 @@ def getDocumentData(file_path, forbidden_chars, categories_dictionary):
 
         data["version"] = doc.core_properties.version
 
-        for c in forbidden_chars:
+        for c in constants.FORBIDDEN_CHARACTERS:
             data["Titel"] = data["Titel"].replace(c, "")
 
-        data["Speltak(ken)"] = data["Speltak(ken)"].lower()
         data["Materiaal"] = data["Materiaal"].lower()
         data["Zoekwoorden"] = data["Zoekwoorden"].lower()
-        data["Categorie"] = categories_dictionary.get(data["Categorie"].lower(), "Overig")
+        data["Speltak(ken)"] = data["Speltak(ken)"].lower()
+        data["Categorie"] = data["Categorie"].lower()
 
         return documentClass.Document(data)
 
+# Controleert en verandert de filepath als er al een bestand met dezelfde naam aanwezig is in de folder
 def customPath(file_path, name):
     already_exists = True
     while already_exists == True:
@@ -92,3 +94,18 @@ def customPath(file_path, name):
             name = name + "V2"
 
     return file_path.joinpath(name + ".docx")
+
+def opkomstPath(start_path, document_data):
+    custom_path = start_path.joinpath("Opkomsten")
+
+    if document_data.speltakken[0] in constants.SPELTAKKEN:
+        custom_path = custom_path.joinpath(document_data.speltakken[0])
+    else:
+        custom_path = custom_path.joinpath("Overig")
+
+    if document_data.categorie in constants.CATEGORIES:
+        custom_path = custom_path.joinpath(document_data.categorie)
+    else:
+        custom_path = custom_path.joinpath("Overig")
+
+    return custom_path
