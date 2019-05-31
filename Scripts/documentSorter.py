@@ -8,13 +8,12 @@ import docx
 import documentClass
 import constants
 
-# Sorteert de bestanden in de input folder en kopieert/verplaatst de bestanden naar de ouput folder
-def sort(in_path, out_path, delete_input):
-    for speltak in constants.SPELTAKKEN:
-        for category in constants.CATEGORIES:
-            out_path.joinpath("Opkomsten", speltak, category).mkdir(parents = True, exist_ok=True)
+# Sorteert de bestanden in de input folder en maakt een file_path voor ieder
+def sort(input_path):
 
-    for file in in_path.iterdir():
+    sorted_documents = []
+
+    for file in input_path.iterdir():
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
             document_data = getDocumentData(str(file))
@@ -23,25 +22,23 @@ def sort(in_path, out_path, delete_input):
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
 
                 if document_data.document_type == "Opkomst":
-                    custom_path = opkomstPath(out_path, document_data)
+                    custom_path = opkomstPath(document_data)
                 else:
                     raise Exception("Not a supported document-type!")
 
                 if document_data.titel != "":
-                    new_path = customPath(custom_path, document_data.titel)
+                    custom_path = custom_path.joinpath(document_data.titel)
                 else:
-                    new_path = customPath(custom_path, file.stem)
+                    custom_path = custom_path.joinpath(file.stem)
 
-                if delete_input == True:
-                    file.rename(new_path)
-                    log.info("File moved to {}".format(new_path))
-                else:
-                    document = docx.Document(str(file))
-                    document.save(str(new_path))
-                    log.info("File copied to {}".format(new_path))
+                custom_path = custom_path.with_suffix(".docx")
+                document_data.file_path = str(custom_path)
+                sorted_documents.append(document_data)
 
             else:
-                log.debug("File {} does not use a valid template".format(file.stem))
+                log.debug("File {} does not use a valid template".format(file.name))
+
+    return sorted_documents
 
 # Alle informatie wordt uit het document gehaald en in een Document object gesptopt
 def getDocumentData(file_path):
@@ -71,32 +68,25 @@ def getDocumentData(file_path):
             data[keys[i]] = fullText
 
         data["version"] = doc.core_properties.version
+        data["local_path"] = file_path
 
-        for c in constants.FORBIDDEN_CHARACTERS:
-            data["Titel"] = data["Titel"].replace(c, "")
+        if "Titel" in data:
+            for c in constants.FORBIDDEN_CHARACTERS:
+                data["Titel"] = data["Titel"].replace(c, "")
 
-        data["Materiaal"] = data["Materiaal"].lower()
-        data["Zoekwoorden"] = data["Zoekwoorden"].lower()
-        data["Speltak(ken)"] = data["Speltak(ken)"].lower()
-        data["Categorie"] = data["Categorie"].lower()
+        if "Materiaal" in data:
+            data["Materiaal"] = data["Materiaal"].lower()
+        if "Zoekwoorden" in data:
+            data["Zoekwoorden"] = data["Zoekwoorden"].lower()
+        if "Speltak(ken)" in data:
+            data["Speltak(ken)"] = data["Speltak(ken)"].lower()
+        if "Categorie" in data:
+            data["Categorie"] = data["Categorie"].lower()
 
         return documentClass.Document(data)
 
-# Controleert en verandert de filepath als er al een bestand met dezelfde naam aanwezig is in de folder
-def customPath(file_path, name):
-    already_exists = True
-    while already_exists == True:
-        already_exists = False
-        for file in file_path.iterdir():
-            if file.stem == name:
-                already_exists = True
-        if already_exists == True:
-            name = name + "V2"
-
-    return file_path.joinpath(name + ".docx")
-
-def opkomstPath(start_path, document_data):
-    custom_path = start_path.joinpath("Opkomsten")
+def opkomstPath(document_data):
+    custom_path = Path("/").joinpath("Opkomsten")
 
     if document_data.speltakken[0] in constants.SPELTAKKEN:
         custom_path = custom_path.joinpath(document_data.speltakken[0])

@@ -8,6 +8,9 @@ log = logging.getLogger(__name__)
 from pathlib import Path
 import configparser
 import documentSorter
+import uploadFiles
+
+#logging.disable(logging.DEBUG)
 
 class MainModel():
 
@@ -44,14 +47,14 @@ class MainModel():
     def ReadConfig(self):
         print("ReadConfig")
 
-    def SortDocuments(self, input_path, output_path):
-        delete_input = self.config["Sorting"].getboolean("delete_input")
-        documentSorter.sort(input_path, output_path, delete_input)
+    def SortDocuments(self, input_path):
+        sorted_documents = documentSorter.sort(input_path)
+        failed_files = uploadFiles.uploadDocuments(sorted_documents)
+        log.info("{} files already exist".format(len(failed_files)))
 
 if __name__ == "__main__":
     model = MainModel()
 
     input = Path(".").resolve().parent.joinpath("Test_Input")
-    output = Path(".").resolve().parent.joinpath("Test_Output")
-    model.SortDocuments(input, output)
+    model.SortDocuments(input)
     print("Done!")
