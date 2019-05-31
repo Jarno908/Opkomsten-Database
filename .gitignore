@@ -8,3 +8,4 @@ Test_Output/
 
 #Exclude credentials
 **/credentials.json
+**/credentials.py

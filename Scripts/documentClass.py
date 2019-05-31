@@ -17,6 +17,8 @@ class Document():
     zoekwoorden = []
     document_type = ""
     template_version = 0
+    file_name = ""
+    storage_id = 0
 
     def __init__(self, doc_dictionary):
         self.titel = ""
