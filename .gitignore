@@ -5,3 +5,6 @@ Test_Output/
 
 #Exclude Python Cache folders
 **/__pycache__
+
+#Exclude credentials
+**/credentials.json
