@@ -5,7 +5,7 @@ log = logging.getLogger(__name__)
 
 from pcloud import PyCloud
 import credentials
-from pathlib import Path
+from pathlib2 import Path
 
 def uploadDocuments(file_list, replace=False):
     failed_files = []

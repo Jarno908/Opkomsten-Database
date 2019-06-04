@@ -3,7 +3,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
-from pathlib import Path
+from pathlib2 import Path
 import docx
 import documentClass
 import constants
@@ -18,7 +18,7 @@ def sort(input_path):
             log.info("Currently being sorted: {}".format(file))
             document_data = getDocumentData(str(file))
 
-            if document_data.template_version != 0:
+            if isinstance(document_data, documentClass.Document) and document_data.template_version != 0:
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
 
                 if document_data.document_type == "Opkomst":
@@ -51,39 +51,41 @@ def getDocumentData(file_path):
         log.error('Read Docx Error!!!')
         return None
     else:
-        table = doc.tables[0]
         data = {}
-        keys = []
-
-        for cell in table.column_cells(0):
-            keys.append(cell.paragraphs[0].text)
-
-        for i in range(len(keys)):
-            fullText = []
-            for paragraph in table.column_cells(1)[i].paragraphs:
-                fullText.append(paragraph.text.replace("\n", ""))
-
-            fullText = "\n".join(fullText)
-
-            data[keys[i]] = fullText
-
-        data["version"] = doc.core_properties.version
         data["local_path"] = file_path
+        if  (len(doc.sections[0].header.tables) > 0
+            and doc.sections[0].header.tables[0].cell(0, 0).paragraphs[0].text == "Template-versie"):
+                data["version"] = doc.sections[0].header.tables[0].cell(0, 1).paragraphs[0].text
+        else:
+            data["version"] = doc.core_properties.version
 
-        if "Titel" in data:
-            for c in constants.FORBIDDEN_CHARACTERS:
-                data["Titel"] = data["Titel"].replace(c, "")
+        if len(data["version"]) != 4:
+            return None
+        else:
+            table = doc.tables[0]
+            keys = []
 
-        if "Materiaal" in data:
-            data["Materiaal"] = data["Materiaal"].lower()
-        if "Zoekwoorden" in data:
-            data["Zoekwoorden"] = data["Zoekwoorden"].lower()
-        if "Speltak(ken)" in data:
-            data["Speltak(ken)"] = data["Speltak(ken)"].lower()
-        if "Categorie" in data:
-            data["Categorie"] = data["Categorie"].lower()
+            for cell in table.column_cells(0):
+                keys.append(cell.paragraphs[0].text)
 
-        return documentClass.Document(data)
+            for i in range(len(keys)):
+                fullText = []
+                for paragraph in table.column_cells(1)[i].paragraphs:
+                    fullText.append(paragraph.text.replace("\n", ""))
+
+                fullText = "\n".join(fullText)
+
+                data[keys[i]] = fullText
+
+            if "Titel" in data:
+                for c in constants.FORBIDDEN_CHARACTERS:
+                    data["Titel"] = data["Titel"].replace(c, "")
+
+            matching_keys = data.keys() & constants.KEYS_TO_LOWER
+            for key in matching_keys:
+                data[key] = data[key].lower()
+
+            return documentClass.Document(data)
 
 def opkomstPath(document_data):
     custom_path = Path("/").joinpath("Opkomsten")

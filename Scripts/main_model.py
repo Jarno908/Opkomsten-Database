@@ -3,9 +3,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
-#logging.disable(logging.INFO)
-
-from pathlib import Path
+from pathlib2 import Path
 import configparser
 import documentSorter
 import uploadFiles

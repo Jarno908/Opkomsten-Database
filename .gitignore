@@ -2,6 +2,7 @@
 Templates/
 Test_Input/
 Test_Output/
+GUI/
 
 #Exclude Python Cache folders
 **/__pycache__
