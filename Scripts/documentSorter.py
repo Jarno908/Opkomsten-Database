@@ -7,6 +7,14 @@ from pathlib2 import Path
 import docx
 import documentClass
 import constants
+import configparser
+import pprint as pp
+
+config = None
+
+def setup_documentSorter(config_dict):
+    global config
+    config = config_dict
 
 # Sorteert de bestanden in de input folder en maakt een file_path voor ieder
 def sort(input_path):
@@ -34,6 +42,7 @@ def sort(input_path):
                 custom_path = custom_path.with_suffix(".docx")
                 document_data.file_path = str(custom_path)
                 sorted_documents.append(document_data)
+                pp.pprint(document_data)
 
             else:
                 log.debug("File {} does not use a valid template".format(file.name))
@@ -51,6 +60,7 @@ def getDocumentData(file_path):
         log.error('Read Docx Error!!!')
         return None
     else:
+        global config
         data = {}
         data["local_path"] = file_path
         if  (len(doc.sections[0].header.tables) > 0
@@ -71,7 +81,7 @@ def getDocumentData(file_path):
             for i in range(len(keys)):
                 fullText = []
                 for paragraph in table.column_cells(1)[i].paragraphs:
-                    fullText.append(paragraph.text.replace("\n", ""))
+                    fullText.append(paragraph.text.replace("\n", "").replace(",", "\n"))
 
                 fullText = "\n".join(fullText)
 
@@ -85,10 +95,13 @@ def getDocumentData(file_path):
             for key in matching_keys:
                 data[key] = data[key].lower()
 
+            if config != None:
+                data["Uploader_Name"] = config["Preferences"]["uploader_name"]
+
             return documentClass.Document(data)
 
 def opkomstPath(document_data):
-    custom_path = Path("/").joinpath("Opkomsten")
+    custom_path = Path("/Documenten Reggegroep/Opkomsten")
 
     if document_data.speltakken[0] in constants.SPELTAKKEN:
         custom_path = custom_path.joinpath(document_data.speltakken[0])

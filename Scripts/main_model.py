@@ -40,10 +40,8 @@ class MainModel():
                 with open(str(self.personal_config_path), "w") as configfile:
                     default_config.write(configfile)
                 log.info("Configfile updated to newer version")
-        self.ReadConfig()
 
-    def ReadConfig(self):
-        print("ReadConfig")
+        documentSorter.setup_documentSorter(self.config)
 
     def SortDocuments(self, input_path):
         sorted_documents = documentSorter.sort(input_path)
