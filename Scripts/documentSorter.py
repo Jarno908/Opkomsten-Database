@@ -5,8 +5,9 @@ log = logging.getLogger(__name__)
 
 from pathlib2 import Path
 import docx
-import documentClass
 import constants
+import documentClass
+from opkomst_module import Opkomst
 
 #from pprint import pprint
 
@@ -25,6 +26,7 @@ def sort(input_path):
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
             document_data = getDocumentData(str(file))
+            #pprint(document_data)
 
             if isinstance(document_data, documentClass.Document) and document_data.template_version != 0:
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
@@ -42,7 +44,6 @@ def sort(input_path):
                 custom_path = custom_path.with_suffix(".docx")
                 document_data.file_path = str(custom_path)
                 sorted_documents.append(document_data)
-                #pprint(document_data)
 
             else:
                 log.debug("File {} does not use a valid template".format(file.name))
@@ -98,7 +99,10 @@ def getDocumentData(file_path):
             if config != None:
                 data["Uploader_Name"] = config["Preferences"]["uploader_name"]
 
-            return documentClass.Document(data)
+            if data["version"][0] == "O":
+                return Opkomst(data)
+
+            return None
 
 def opkomstPath(document_data):
     custom_path = Path("/Documenten Reggegroep/Opkomsten")

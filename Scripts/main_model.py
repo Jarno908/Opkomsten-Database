@@ -52,5 +52,5 @@ if __name__ == "__main__":
     model = MainModel()
 
     input = Path(".").resolve().parent.joinpath("Test_Input")
-    model.SortDocuments(input)
+    model.SortDocuments(input, True)
     print("Done!")
