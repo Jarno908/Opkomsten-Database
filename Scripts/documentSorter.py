@@ -7,8 +7,8 @@ from pathlib2 import Path
 import docx
 import documentClass
 import constants
-import configparser
-import pprint as pp
+
+#from pprint import pprint
 
 config = None
 
@@ -42,7 +42,7 @@ def sort(input_path):
                 custom_path = custom_path.with_suffix(".docx")
                 document_data.file_path = str(custom_path)
                 sorted_documents.append(document_data)
-                pp.pprint(document_data)
+                #pprint(document_data)
 
             else:
                 log.debug("File {} does not use a valid template".format(file.name))

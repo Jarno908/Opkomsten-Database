@@ -18,9 +18,10 @@ def uploadDocuments(file_list, replace=False):
         for file in file_list:
             file_path = Path(file.file_path)
             log.info("Currently trying to upload {}".format(file_path))
+            file_data = open(file.local_path, "rb")
 
             if replace == True:
-                result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file.local_path)
+                result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file_data)
                 file.storage_id = result["fileids"][0]
             else:
                 directory_list = pc.listfolder(path=file_path.parent)
@@ -32,7 +33,7 @@ def uploadDocuments(file_list, replace=False):
                     log.warning("file already exist in directory!")
                     failed_files.append(file)
                 else:
-                    result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file.local_path)
+                    result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file_data)
                     file.storage_id = result["fileids"][0]
 
     finally:

@@ -7,21 +7,6 @@ import constants
 
 class Document():
 
-    titel = ""
-    auteurs = []
-    datum = ""
-    speltakken = []
-    categorie = ""
-    omschrijving = ""
-    materiaal = []
-    zoekwoorden = []
-    document_type = ""
-    template_version = 0
-    file_path = ""
-    storage_id = 0
-    local_path = ""
-    uploader_name = ""
-
     def __init__(self, doc_dictionary):
         self.titel = ""
         self.auteurs = []
@@ -42,6 +27,7 @@ class Document():
             self.document_type = constants.DOCUMENT_TYPES.get(doc_dictionary["version"][0])
             self.template_version = int(doc_dictionary["version"][1:])
             self.uploader_name = doc_dictionary["Uploader_Name"]
+            self.local_path = doc_dictionary["local_path"]
 
             if self.document_type == "Opkomst":
                 self.init_Opkomst(doc_dictionary)
