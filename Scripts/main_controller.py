@@ -47,23 +47,27 @@ class MyApplication:
         self.mainwindow.mainloop()
 
     def on_path_changed(self, event=None):
-        input_path = Path(self.upload_pathchooser.cget("path"))
-        if input_path.exists() == True and input_path.is_dir() == True:
+        files = self.master.tk.splitlist(self.upload_pathchooser.cget("path"))
+        print(files)
+        if len(files) > 0 and Path(files[0]).is_file() == True:
             self.upload_button.config(state="normal")
         else:
             self.upload_button.config(state="disabled")
 
     def upload_button_pressed(self, event=None):
-        input_path = Path(self.upload_pathchooser.cget("path"))
-        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[input_path])
+        files = self.master.tk.splitlist(self.upload_pathchooser.cget("path"))
+        files_list = []
+        for file in files:
+            files_list.append(Path(file))
+        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[files_list])
         self.thread1.daemon = True
         self.thread1.start()
         self.loading_window = self.builder.get_object("Loading_Window", self.mainwindow)
+        self.builder.get_object("Loading_Label").config(text="Uploading...")
         self.loading_window.run()
         self.loading_loop()
 
     def loading_loop(self):
-        log.debug("still Alive")
         if self.thread1.isAlive() == True:
             self.timer_id = root.after(100, self.loading_loop)
         else:

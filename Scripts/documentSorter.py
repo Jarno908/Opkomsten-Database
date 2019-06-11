@@ -18,11 +18,11 @@ def setup_documentSorter(config_dict):
     config = config_dict
 
 # Sorteert de bestanden in de input folder en maakt een file_path voor ieder
-def sort(input_path):
+def sort(files_list):
 
     sorted_documents = []
 
-    for file in input_path.iterdir():
+    for file in files_list:
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
             document_data = getDocumentData(str(file))

@@ -43,8 +43,8 @@ class MainModel():
 
         documentSorter.setup_documentSorter(self.config)
 
-    def SortDocuments(self, input_path, replace_files = False):
-        sorted_documents = documentSorter.sort(input_path)
+    def SortDocuments(self, files_list, replace_files = False):
+        sorted_documents = documentSorter.sort(files_list)
         failed_files = uploadFiles.uploadDocuments(sorted_documents, replace_files)
         log.info("{} files already exist".format(len(failed_files)))
 
