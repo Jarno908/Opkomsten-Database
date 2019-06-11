@@ -3,6 +3,10 @@
 # Sorting
 FORBIDDEN_CHARACTERS = '/\\?%*:|"<>'
 DOCUMENT_TYPES = {"O":"Opkomst"}
+KEYS_TO_LOWER =    ["Materiaal",
+                    "Zoekwoorden",
+                    "Speltak(ken)",
+                    "Categorie"]
 
 #Opkomst-document
 OPKOMST_KEYS = ["Titel",

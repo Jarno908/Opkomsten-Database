@@ -3,7 +3,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
-from pathlib import Path
+from pathlib2 import Path
 import docx
 
 file = Path(".").resolve().parent.joinpath("Templates", "Opkomst Template V01.docx")

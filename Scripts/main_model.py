@@ -3,9 +3,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
-#logging.disable(logging.INFO)
-
-from pathlib import Path
+from pathlib2 import Path
 import configparser
 import documentSorter
 import uploadFiles
@@ -42,19 +40,17 @@ class MainModel():
                 with open(str(self.personal_config_path), "w") as configfile:
                     default_config.write(configfile)
                 log.info("Configfile updated to newer version")
-        self.ReadConfig()
 
-    def ReadConfig(self):
-        print("ReadConfig")
+        documentSorter.setup_documentSorter(self.config)
 
-    def SortDocuments(self, input_path):
-        sorted_documents = documentSorter.sort(input_path)
-        failed_files = uploadFiles.uploadDocuments(sorted_documents)
+    def SortDocuments(self, files_list, replace_files = False):
+        sorted_documents = documentSorter.sort(files_list)
+        failed_files = uploadFiles.uploadDocuments(sorted_documents, replace_files)
         log.info("{} files already exist".format(len(failed_files)))
 
 if __name__ == "__main__":
     model = MainModel()
 
     input = Path(".").resolve().parent.joinpath("Test_Input")
-    model.SortDocuments(input)
+    model.SortDocuments(input, True)
     print("Done!")
