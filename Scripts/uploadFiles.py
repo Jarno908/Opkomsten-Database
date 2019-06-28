@@ -4,14 +4,13 @@ logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - 
 log = logging.getLogger(__name__)
 
 from pcloud import PyCloud
-import credentials
 from pathlib2 import Path
 
-def uploadDocuments(file_list, replace=False):
+def uploadDocuments(file_list, credentials, replace=False):
     failed_files = []
 
     try:
-        pc = PyCloud(credentials.STORAGE_USERNAME, credentials.STORAGE_PASSWORD)
+        pc = PyCloud(credentials["storage_username"], credentials["storage_password"])
     except:
         log.error("Could not login to pCloud!")
     else:
