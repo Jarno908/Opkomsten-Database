@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="ttk.Notebook" id="Main_Notebook">
+    <property name="height">400</property>
+    <property name="width">600</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="propagate">True</property>
+      <property name="row">0</property>
+      <property name="sticky">nsew</property>
+    </layout>
+    <child>
+      <object class="ttk.Notebook.Tab" id="Tab_FileSearcher">
+        <property name="text" translatable="yes">Zoeken</property>
+        <child>
+          <object class="ttk.Frame" id="Frame_FileSearcher">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <rows>
+                <row id="0">
+                  <property name="weight">1</property>
+                </row>
+              </rows>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="Label_Temp">
+                <property name="font">{DejaVu Sans} 16 {bold}</property>
+                <property name="text" translatable="yes">Hier komt de zoekmogelijkheid.
+</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Notebook.Tab" id="Tab_FileUpload">
+        <property name="text" translatable="yes">Uploaden</property>
+        <child>
+          <object class="ttk.Frame" id="Frame_FileUpload">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <rows>
+                <row id="0">
+                  <property name="weight">0</property>
+                </row>
+                <row id="1">
+                  <property name="weight">0</property>
+                </row>
+                <row id="2">
+                  <property name="weight">0</property>
+                </row>
+                <row id="3">
+                  <property name="weight">10</property>
+                </row>
+                <row id="4">
+                  <property name="weight">10</property>
+                </row>
+                <row id="5">
+                  <property name="weight">10</property>
+                </row>
+              </rows>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="Upload_Title">
+                <property name="cursor">based_arrow_down</property>
+                <property name="font">{DejaVu Sans} 14 {bold}</property>
+                <property name="takefocus">true</property>
+                <property name="text" translatable="yes">Documenten Uploaden</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="pady">5</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                  <property name="sticky">n</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Upload_Description">
+                <property name="text" translatable="yes">Selecteer de documenten die je wilt uploaden.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="pady">5</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                  <property name="sticky">n</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Separator" id="Separator_1">
+                <property name="orient">horizontal</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">1</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                  <property name="sticky">new</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="customappwidgets.customPathChooserWidget" id="Pathchooser_Upload">
+                <property name="selection type">files</property>
+                <property name="title" translatable="yes">Selecteer een of meerdere bestanden.</property>
+                <bind add="" handler="upload_path_changed" sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" />
+                <layout>
+                  <property name="column">0</property>
+                  <property name="padx">40</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                  <property name="sticky">sew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="Button_Upload">
+                <property name="command">upload_button_pressed</property>
+                <property name="state">disabled</property>
+                <property name="text" translatable="yes">Uploaden</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="ipadx">10</property>
+                  <property name="ipady">10</property>
+                  <property name="pady">5</property>
+                  <property name="propagate">True</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Upload_Logo">
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">5</property>
+                  <property name="sticky">n</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Notebook.Tab" id="Tab_UpdateFile">
+        <property name="text" translatable="yes">Update</property>
+        <child>
+          <object class="ttk.Frame" id="Frame_UpdateFile">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Notebook.Tab" id="Tab_Settings">
+        <property name="text" translatable="yes">Instellingen</property>
+        <child>
+          <object class="ttk.Frame" id="Frame_Settings">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+              <rows>
+                <row id="0">
+                  <property name="weight">0</property>
+                </row>
+                <row id="1">
+                  <property name="weight">0</property>
+                </row>
+                <row id="2">
+                  <property name="weight">0</property>
+                </row>
+                <row id="3">
+                  <property name="weight">0</property>
+                </row>
+              </rows>
+              <columns>
+                <column id="0">
+                  <property name="weight">1</property>
+                </column>
+                <column id="1">
+                  <property name="weight">1</property>
+                </column>
+                <column id="2">
+                  <property name="weight">1</property>
+                </column>
+              </columns>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="Settings_Title">
+                <property name="font">{DejaVu Sans} 14 {bold}</property>
+                <property name="text" translatable="yes">Instellingen</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">3</property>
+                  <property name="pady">5</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Settings_Description">
+                <property name="text" translatable="yes">HIer kun je verschillende instellingen aanpassen.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">3</property>
+                  <property name="pady">5</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Separator" id="Settings_Seperator">
+                <property name="orient">horizontal</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">3</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Upload_Name_Label">
+                <property name="text" translatable="yes">Uploader Naam:</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="pady">10</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="Upload_Name_Entry">
+                <property name="state">normal</property>
+                <property name="textvariable">string:uploader_name_text</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="ipadx">50</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="Upload_Name_Button">
+                <property name="command">update_uploader_name</property>
+                <property name="text" translatable="yes">Verander Naam</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="ipadx">20</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Download_Location_Label">
+                <property name="text" translatable="yes">Download folder:</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">4</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="customappwidgets.customPathChooserWidget" id="Pathchooser_Download">
+                <property name="selection type">directory</property>
+                <bind add="" handler="download_path_changed" sequence="&lt;&lt;PathChooserPathChanged&gt;&gt;" />
+                <layout>
+                  <property name="column">1</property>
+                  <property name="columnspan">2</property>
+                  <property name="ipadx">50</property>
+                  <property name="propagate">True</property>
+                  <property name="row">4</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="pygubu.builder.widgets.dialog" id="Loading_Window">
+    <property name="cursor">arrow</property>
+    <property name="height">100</property>
+    <property name="modal">false</property>
+    <property name="resizable">both</property>
+    <property name="width">200</property>
+    <child>
+      <object class="ttk.Frame" id="Loading_Frame">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="padx">50</property>
+          <property name="pady">20</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nsew</property>
+          <rows>
+            <row id="0">
+              <property name="weight">1</property>
+            </row>
+          </rows>
+          <columns>
+            <column id="0">
+              <property name="weight">1</property>
+            </column>
+          </columns>
+        </layout>
+        <child>
+          <object class="ttk.Label" id="Loading_Label">
+            <property name="text" translatable="yes">Loading_Label</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">nsew</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
