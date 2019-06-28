@@ -3,6 +3,7 @@ Templates/
 Test_Input/
 Test_Output/
 GUI/
+Resources/Images
 
 #Exclude Python Cache folders
 **/__pycache__
@@ -10,3 +11,4 @@ GUI/
 #Exclude credentials
 **/credentials.json
 **/credentials.py
+**/credentials.ini

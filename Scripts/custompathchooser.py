@@ -27,6 +27,7 @@ class CustomPathChooser(ttk.Frame):
         self._choose = self.FILE
         self._oldvalue = ''
         self.title_text = "Choose a File/Directory"
+        self.start_dir = ""
         # subwidgets
         self.entry = o = ttk.Entry(self)
         o.grid(row=0, column=0, sticky='ew')
@@ -63,6 +64,10 @@ class CustomPathChooser(ttk.Frame):
         if key in args:
             self.title_text = args[key]
             del args[key]
+        key = 'start_dir'
+        if key in args:
+            self.start_dir = args[key]
+            del args[key]
         ttk.Frame.configure(self, args)
 
     config = configure
@@ -83,6 +88,9 @@ class CustomPathChooser(ttk.Frame):
         option = "title"
         if key == option:
             return self.title_text
+        option = 'start_dir'
+        if key == option:
+            return self.start_dir
         return ttk.Frame.cget(self, key)
 
     __getitem__ = cget
@@ -109,10 +117,10 @@ class CustomPathChooser(ttk.Frame):
     def __on_folder_btn_pressed(self):
         fname = None
         if self._choose == self.FILE:
-            fname = filedialog.askopenfilename(initialdir=self.cget('path'), title=self.cget("title"))
+            fname = filedialog.askopenfilename(initialdir=self.cget('start_dir'), title=self.cget("title"))
         elif self._choose == self.DIR:
-            fname = filedialog.askdirectory(initialdir=self.cget('path'), title=self.cget("title"))
+            fname = filedialog.askdirectory(initialdir=self.cget('start_dir'), title=self.cget("title"))
         else:
-            fname = filedialog.askopenfilenames(initialdir=self.cget("path"), title=self.cget("title"))
+            fname = filedialog.askopenfilenames(initialdir=self.cget("start_dir"), title=self.cget("title"))
         if fname:
             self.configure(path=fname)
