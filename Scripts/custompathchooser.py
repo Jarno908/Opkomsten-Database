@@ -5,10 +5,12 @@ try:
     import tkinter as tk
     import tkinter.ttk as ttk
     from tkinter import filedialog
+    from pathlib2 import Path
 except:
     import Tkinter as tk
     import ttk
     import tkFileDialog as filedialog
+    from pathlib2 import Path
 
 
 class CustomPathChooser(ttk.Frame):
@@ -24,8 +26,9 @@ class CustomPathChooser(ttk.Frame):
 
     def __init__(self, master=None, **kw):
         ttk.Frame.__init__(self, master, **kw)
+        self.master = master
         self._choose = self.FILE
-        self._oldvalue = ''
+        self.current_value = ''
         self.title_text = "Choose a File/Directory"
         self.start_dir = ""
         # subwidgets
@@ -81,7 +84,7 @@ class CustomPathChooser(ttk.Frame):
             return self.folder_button.cget(key)
         option = 'path'
         if key == option:
-            return self.entry.get()
+            return self.current_value
         option = 'textvariable'
         if key == option:
             return self.entry.cget(option)
@@ -96,14 +99,30 @@ class CustomPathChooser(ttk.Frame):
     __getitem__ = cget
 
     def _is_changed(self):
-#        print(repr(self._oldvalue), ':', repr(self.entry.get()))
-        if self._oldvalue != self.entry.get():
+#        print(repr(self.current_value), ':', repr(self.entry.get()))
+        if self.current_value != self.entry.get():
             return True
         return False
 
     def _generate_changed_event(self):
         if self._is_changed():
-            self._oldvalue = self.entry.get()
+            self.current_value = self.entry.get()
+            if self._choose == self.FILE:
+                display_text = Path(self.entry.get()).name
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
+            elif self._choose == self.DIR:
+                display_text = Path(self.entry.get()).stem
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
+            elif self._choose == self.FILES:
+                paths = self.master.tk.splitlist(self.entry.get())
+                path_list = []
+                for path in paths:
+                    path_list.append(str(Path(path).name))
+                display_text = "; ".join(path_list)
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
             self.event_generate('<<PathChooserPathChanged>>')
 
     def __on_enter_key_pressed(self, event):
