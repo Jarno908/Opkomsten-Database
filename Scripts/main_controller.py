@@ -9,6 +9,7 @@ import pygubu
 import main_model
 from pathlib2 import Path
 import threading
+import queue
 from PIL import Image, ImageTk
 
 class MyApplication:
@@ -72,18 +73,15 @@ class MyApplication:
         files_list = []
         for file in files:
             files_list.append(Path(file))
-        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[files_list])
+        self.q = queue.Queue()
+        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[files_list, self.q])
         self.thread1.daemon = True
         self.thread1.start()
-        self.loading_label.config(text="Uploading...")
 
-        width_dif = self.mainwindow.winfo_reqwidth() - self.loading_window.toplevel.winfo_reqwidth()
-        heigth_dif = self.mainwindow.winfo_reqheight() - self.loading_window.toplevel.winfo_reqheight()
-        pos_x = int(self.master.winfo_x() + width_dif / 2)
-        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
-        self.loading_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
-
+        self.loading_window_setup("Uploading...")
         self.loading_window.run()
+
+        self.post_loading_method = self.post_uploading
 
         self.loading_loop()
 
@@ -97,10 +95,20 @@ class MyApplication:
 
     def update_button_pressed(self, event=None):
         file = Path(self.update_pathchooser.cget("path"))
-        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[[file], True])
+        self.q = queue.Queue()
+        self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[[file], self.q, True])
         self.thread1.daemon = True
         self.thread1.start()
-        self.loading_label.config(text="Updating...")
+
+        self.loading_window_setup("Updating...")
+        self.loading_window.run()
+
+        self.post_loading_method = self.post_updating
+
+        self.loading_loop()
+
+    def loading_window_setup(self, loading_text = "Loading..."):
+        self.loading_label.config(text=loading_text)
 
         width_dif = self.mainwindow.winfo_reqwidth() - self.loading_window.toplevel.winfo_reqwidth()
         heigth_dif = self.mainwindow.winfo_reqheight() - self.loading_window.toplevel.winfo_reqheight()
@@ -108,15 +116,41 @@ class MyApplication:
         pos_y = int(self.master.winfo_y() + heigth_dif / 3)
         self.loading_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
 
-        self.loading_window.run()
-
-        self.loading_loop()
-
     def loading_loop(self):
         if self.thread1.isAlive() == True:
             self.timer_id = root.after(100, self.loading_loop)
         else:
             self.loading_window.close()
+            if self.post_loading_method != None:
+                self.post_loading_method()
+
+    def post_uploading(self):
+        results = self.q.get()
+
+        if len(results[0][1]) > 0:
+            message = "{} documenten konden niet geupload worden.\nDocumenten die al online staan kunnen niet opnieuw geupload worden.\nJe kunt documenten updaten in het 'Update' tabblad.\n\nNiet geupload:\n".format(len(results[0][1]))
+            for file in results[0][1]:
+                message = message + str(Path(file.local_path).name) + "\n"
+            messagebox.showwarning("Uploaden voltooid",
+                                message,
+                                parent=self.mainwindow)
+        else:
+            messagebox.showinfo("Uploaden voltooid",
+                                "Alle documenten zijn succesvol geupload.",
+                                parent=self.mainwindow)
+
+    def post_updating(self):
+        results = self.q.get()
+
+        if len(results[0][1]) > 0:
+            message = "{} kon niet geupdate worden".format(str(Path(results[0][1].local_path).name))
+            messagebox.showwarning("Update voltooid",
+                                message,
+                                parent=self.mainwindow)
+        else:
+            messagebox.showinfo("Update voltooid",
+                                "Het document is succesvol geupdate.",
+                                parent=self.mainwindow)
 
     def update_uploader_name(self):
         new_name = self.uploader_name_text.get().replace(":", "")

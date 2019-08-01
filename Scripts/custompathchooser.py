@@ -107,15 +107,15 @@ class CustomPathChooser(ttk.Frame):
     def _generate_changed_event(self):
         if self._is_changed():
             self.current_value = self.entry.get()
-            if(self._choose == self.FILE):
+            if self._choose == self.FILE:
                 display_text = Path(self.entry.get()).name
                 self.entry.delete(0, "end")
                 self.entry.insert(0, display_text)
-            elif(self._choose == self.DIR):
+            elif self._choose == self.DIR:
                 display_text = Path(self.entry.get()).stem
                 self.entry.delete(0, "end")
                 self.entry.insert(0, display_text)
-            elif(self._choose == self.FILES):
+            elif self._choose == self.FILES:
                 paths = self.master.tk.splitlist(self.entry.get())
                 path_list = []
                 for path in paths:

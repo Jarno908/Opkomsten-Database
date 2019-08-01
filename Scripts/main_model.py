@@ -53,12 +53,13 @@ class MainModel():
         self.config["Preferences"]["download_directory"] = str(Path().home().joinpath("Downloads"))
         self.SaveConfig()
 
-    def SortDocuments(self, files_list, replace_files = False):
+    def SortDocuments(self, files_list, q, replace_files = False):
         sorted_documents = documentSorter.sort(files_list)
         upload_results = self.pCloud_shell.uploadDocuments(sorted_documents, replace_files)
         log.info("{} files already exist on pCloud".format(len(upload_results[1])))
-        database_result = self.database_shell.insert_entries(upload_results[0])
-        log.info("{} files failed to insert into database".format(len(database_result)))
+        database_results = self.database_shell.insert_entries(upload_results[0])
+        log.info("{} files failed to insert into database".format(len(database_results)))
+        q.put([upload_results, database_results])
 
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
