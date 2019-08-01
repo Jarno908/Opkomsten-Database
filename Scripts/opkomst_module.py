@@ -8,8 +8,8 @@ from documentClass import Document
 
 class Opkomst(Document):
 
-    def __init__(self, doc_dictionary):
-        Document.__init__(self, doc_dictionary)
+    def __init__(self, doc_info, from_database = False):
+        Document.__init__(self, doc_info, from_database)
 
         self.speltakken = []
         self.categorie = ""
@@ -17,33 +17,27 @@ class Opkomst(Document):
         self.materiaal = []
         self.zoekwoorden = []
 
+        self.document_type = "Opkomst"
         method_string = "opkomstV" + str(self.template_version)
         opkomst_methods = {"opkomstV1" : self.opkomstV1}
 
         if method_string in opkomst_methods:
-            opkomst_methods[method_string](doc_dictionary)
+            opkomst_methods[method_string](doc_info)
 
-    def opkomstV1(self, doc_dictionary):
-        self.titel = doc_dictionary["Titel"].strip()
+    def opkomstV1(self, doc_info):
 
-        authors = doc_dictionary["Auteur"].split("\n")
-        for author in authors:
-            self.auteurs.append(author.strip())
-
-        self.datum = doc_dictionary["Datum"].strip()
-
-        groups = doc_dictionary["Speltak(ken)"].split("\n")
+        groups = doc_info["Speltak(ken)"].split("\n")
         for group in groups:
             self.speltakken.append(constants.SPELTAKKEN_DICTIONARY.get(group.strip(), "Overig"))
 
-        self.categorie = constants.CATEGORIES_DICTIONARY.get(doc_dictionary["Categorie"], "Overig")
+        self.categorie = constants.CATEGORIES_DICTIONARY.get(doc_info["Categorie"], "Overig")
 
-        self.omschrijving = doc_dictionary["Omschrijving"]
+        self.omschrijving = doc_info["Omschrijving"]
 
-        materials = doc_dictionary["Materiaal"].split("\n")
+        materials = doc_info["Materiaal"].split("\n")
         for material in materials:
             self.materiaal.append(material.strip())
 
-        searchwords = doc_dictionary["Zoekwoorden"].split("\n")
+        searchwords = doc_info["Zoekwoorden"].split("\n")
         for word in searchwords:
             self.zoekwoorden.append(word.strip())

@@ -6,7 +6,8 @@ log = logging.getLogger(__name__)
 from pathlib2 import Path
 import configparser
 import documentSorter
-import uploadFiles
+import pCloud_communications
+import database_communications
 import base64
 
 #logging.disable(logging.DEBUG)
@@ -54,8 +55,10 @@ class MainModel():
 
     def SortDocuments(self, files_list, replace_files = False):
         sorted_documents = documentSorter.sort(files_list)
-        failed_files = uploadFiles.uploadDocuments(sorted_documents, self.credentials, replace_files)
-        log.info("{} files already exist".format(len(failed_files)))
+        upload_results = self.pCloud_shell.uploadDocuments(sorted_documents, replace_files)
+        log.info("{} files already exist on pCloud".format(len(upload_results[1])))
+        database_result = self.database_shell.insert_entries(upload_results[0])
+        log.info("{} files failed to insert into database".format(len(database_result)))
 
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
@@ -69,3 +72,6 @@ class MainModel():
             for (key, val) in credentials_config.items(section):
                 decrypted_val = base64.b64decode(val.encode('utf-8')).decode('utf-8')
                 self.credentials[key] = decrypted_val
+
+        self.pCloud_shell = pCloud_communications.pCloud_shell(self.credentials)
+        self.database_shell = database_communications.database_shell(self.credentials)

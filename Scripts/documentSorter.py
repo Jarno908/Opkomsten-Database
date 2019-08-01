@@ -99,7 +99,10 @@ def getDocumentData(file_path):
             if config != None:
                 data["Uploader_Name"] = config["Preferences"]["uploader_name"]
 
-            if data["version"][0] == "O":
+            data["document_type"] = constants.DOCUMENT_TYPES.get(data["version"][0])
+            data["version"] = int(data["version"][1:])
+
+            if data["document_type"] == "Opkomst":
                 return Opkomst(data)
 
             return None
