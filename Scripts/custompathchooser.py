@@ -107,13 +107,22 @@ class CustomPathChooser(ttk.Frame):
     def _generate_changed_event(self):
         if self._is_changed():
             self.current_value = self.entry.get()
-            paths = self.master.tk.splitlist(self.entry.get())
-            path_list = []
-            for path in paths:
-                path_list.append(str(Path(path).name))
-            display_text = "; ".join(path_list)
-            self.entry.delete(0, "end")
-            self.entry.insert(0, display_text)
+            if(self._choose == self.FILE):
+                display_text = Path(self.entry.get()).name
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
+            elif(self._choose == self.DIR):
+                display_text = Path(self.entry.get()).stem
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
+            elif(self._choose == self.FILES):
+                paths = self.master.tk.splitlist(self.entry.get())
+                path_list = []
+                for path in paths:
+                    path_list.append(str(Path(path).name))
+                display_text = "; ".join(path_list)
+                self.entry.delete(0, "end")
+                self.entry.insert(0, display_text)
             self.event_generate('<<PathChooserPathChanged>>')
 
     def __on_enter_key_pressed(self, event):
