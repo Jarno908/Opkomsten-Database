@@ -11,6 +11,8 @@ from pathlib2 import Path
 import threading
 import queue
 from PIL import Image, ImageTk
+from itertools import cycle
+from documents_frame import DocumentsFrame
 
 class MyApplication:
 
@@ -41,9 +43,11 @@ class MyApplication:
 
         self.load_images_init()
         self.loading_window_init()
+        self.opkomsten_search_init()
         self.upload_tab_init()
         self.update_tab_init()
         self.settings_tab_init()
+        self.items_window_init()
 
         if self.model.credentials_config_path.exists() == False:
             self.master.withdraw()
@@ -59,6 +63,32 @@ class MyApplication:
 
     def run(self):
         self.master.mainloop()
+
+    def opkomsten_button_pressed(self, event=None):
+        width_dif = self.mainwindow.winfo_reqwidth() - self.items_window.toplevel.winfo_reqwidth()
+        heigth_dif = self.mainwindow.winfo_reqheight() - self.items_window.toplevel.winfo_reqheight()
+        pos_x = int(self.master.winfo_x() + width_dif / 2)
+        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
+        self.items_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
+
+        for child in self.items_frame.interior.winfo_children():
+            child.destroy()
+
+        self.items_frame.canvas.yview_moveto(0.011)
+
+        example_data = [{"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
+                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"}
+                        ]
+        DocumentsFrame(self.items_frame.interior, example_data)
+
+        self.items_window.run()
 
     def upload_path_changed(self, event=None):
         files = self.master.tk.splitlist(self.upload_pathchooser.cget("path"))
@@ -78,7 +108,7 @@ class MyApplication:
         self.thread1.daemon = True
         self.thread1.start()
 
-        self.loading_window_setup("Uploading...")
+        self.loading_window_setup("Uploading")
         self.loading_window.run()
 
         self.post_loading_method = self.post_uploading
@@ -100,15 +130,20 @@ class MyApplication:
         self.thread1.daemon = True
         self.thread1.start()
 
-        self.loading_window_setup("Updating...")
+        self.loading_window_setup("Updating")
         self.loading_window.run()
 
         self.post_loading_method = self.post_updating
 
         self.loading_loop()
 
-    def loading_window_setup(self, loading_text = "Loading..."):
-        self.loading_label.config(text=loading_text)
+    def loading_window_setup(self, loading_text = "Loading"):
+        trail_loop = ["", ".", "..", "...", "....", "....."]
+        loading_loop_text = []
+        for trail in trail_loop:
+            loading_loop_text.append(loading_text + trail)
+
+        self.loading_text_loop = cycle(loading_loop_text)
 
         width_dif = self.mainwindow.winfo_reqwidth() - self.loading_window.toplevel.winfo_reqwidth()
         heigth_dif = self.mainwindow.winfo_reqheight() - self.loading_window.toplevel.winfo_reqheight()
@@ -118,6 +153,7 @@ class MyApplication:
 
     def loading_loop(self):
         if self.thread1.isAlive() == True:
+            self.loading_label.config(text=next(self.loading_text_loop))
             self.timer_id = root.after(100, self.loading_loop)
         else:
             self.loading_window.close()
@@ -162,6 +198,16 @@ class MyApplication:
         self.model.config["Preferences"]["download_directory"] = new_path
         self.model.SaveConfig()
 
+        #All the methods for initializing the GUI
+
+    def opkomsten_search_init(self):
+        self.opkomsten_search_words = self.builder.get_object("Searchwords_Entry")
+        self.opkomsten_speltaken_combobox = self.builder.get_object("Speltakken_Combobox")
+        self.opkomsten_categories_combobox = self.builder.get_object("Categories_Combobox")
+
+        self.opkomsten_speltaken_combobox.current(0)
+        self.opkomsten_categories_combobox.current(0)
+
     def upload_tab_init(self):
         self.upload_pathchooser = self.builder.get_object("Pathchooser_Upload")
         self.upload_button = self.builder.get_object("Button_Upload")
@@ -192,6 +238,11 @@ class MyApplication:
     def load_images_init(self):
         self.logo_image = Image.open(str(self.reggegroep_logo_200px_path))
         self.reggegroep_logo_200px_image = ImageTk.PhotoImage(Image.open(str(self.reggegroep_logo_200px_path)))
+
+    def items_window_init(self):
+        self.items_window = self.builder.get_object("Items_Window", self.mainwindow)
+        self.items_frame = self.builder.get_object("Items_Frame", self.mainwindow)
+
 
 if __name__ == "__main__":
     root = tk.Tk()
