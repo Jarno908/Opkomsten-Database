@@ -62,6 +62,9 @@ class database_shell():
                 search_parts.append("(title LIKE CONCAT('%%', %s, '%%') OR description LIKE CONCAT('%%', %s, '%%') OR materials LIKE CONCAT('%%', %s, '%%') OR searchwords LIKE CONCAT('%%', %s, '%%'))")
                 for i in range(4):
                     search_values.append(value)
+            elif key == "speltakken":
+                search_parts.append("speltakken LIKE CONCAT('%%', %s, '%%')")
+                search_values.append(value)
             else:
                 search_parts.append("{} = %s".format(key))
                 search_values.append(value)
@@ -86,8 +89,8 @@ class database_shell():
                 "filepath":item[4],
                 "version":item[5],
                 "Uploader_Name":item[6],
-                "Speltak(ken)":item[7],
-                "Categorie":item[8],
+                "Speltak(ken)":item[7].lower(),
+                "Categorie":item[8].lower(),
                 "Omschrijving":item[9],
                 "Materiaal":item[10],
                 "Zoekwoorden":item[11]

@@ -10,17 +10,21 @@ import tkinter as tk
 
 def DocumentsFrame(parent, items):
 
-    for item in items:
+    if len(items) == 0:
         item_frame = ttk.Frame(parent, borderwidth=5)
+        ttk.Label(parent, text="Geen resultaten gevonden.").pack(fill=tk.BOTH, padx=20, pady=20)
+    else:
+        for item in items:
+            item_frame = ttk.Frame(parent, borderwidth=5)
 
-        ttk.Separator(item_frame, orient=tk.HORIZONTAL).grid(row=0, column=0, sticky="new", columnspan=3, pady=2)
-        ttk.Button(item_frame, text="Meer Info").grid(row=1, column=2, rowspan=2, padx=10)
-        ttk.Button(item_frame, text="Download").grid(row=3, column=2, padx=10)
+            ttk.Separator(item_frame, orient=tk.HORIZONTAL).grid(row=0, column=0, sticky="new", columnspan=3, pady=2)
+            ttk.Button(item_frame, text="Meer Info").grid(row=1, column=2, rowspan=2, padx=10)
+            ttk.Button(item_frame, text="Download").grid(row=3, column=2, padx=10)
 
-        i = 1
-        for key, value in item.items():
-            ttk.Label(item_frame, text=key).grid(row=i, column=0, padx=5)
-            ttk.Label(item_frame, text=value, width=35, wraplength=300).grid(row=i, column=1)
-            i += 1
+            i = 1
+            for key, value in item.items():
+                ttk.Label(item_frame, text=key).grid(row=i, column=0, padx=5)
+                ttk.Label(item_frame, text=value, width=35, wraplength=300).grid(row=i, column=1)
+                i += 1
 
-        item_frame.pack(fill=tk.X, padx=20)
+            item_frame.pack(fill=tk.X, padx=20)
