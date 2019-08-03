@@ -76,17 +76,34 @@ class MyApplication:
 
         self.items_frame.canvas.yview_moveto(0.011)
 
-        example_data = [{"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"},
-                        {"Titel:":"Voorbeeld Titel", "Authors:":"Milan, Jarno","Datum:":"20-08-1996","Naam:":"voorbeeld.docx"}
-                        ]
-        DocumentsFrame(self.items_frame.interior, example_data)
+        search_string = self.opkomsten_search_entry.get().strip()
+        search_speltak = self.opkomsten_speltaken_combobox.get()
+        search_category = self.opkomsten_categories_combobox.get()
+
+        search_info = {
+        "search_string" : search_string,
+        "speltakken" : search_speltak,
+        "category" : search_category
+        }
+
+        self.q = queue.Queue()
+        self.thread1 = threading.Thread(target=self.model.SearchDocuments, args=["opkomst", search_info, self.q])
+        self.thread1.daemon = True
+        self.thread1.start()
+
+        self.loading_window_setup("Zoeken")
+        self.loading_window.run()
+
+        self.post_loading_method = self.post_document_search
+
+        self.loading_loop()
+
+    def post_document_search(self):
+        documents = self.q.get()
+        display_data = []
+        for document in documents:
+            display_data.append(document.small_info())
+        DocumentsFrame(self.items_frame.interior, display_data)
 
         self.items_window.run()
 
@@ -201,9 +218,9 @@ class MyApplication:
         #All the methods for initializing the GUI
 
     def opkomsten_search_init(self):
-        self.opkomsten_search_words = self.builder.get_object("Searchwords_Entry")
-        self.opkomsten_speltaken_combobox = self.builder.get_object("Speltakken_Combobox")
-        self.opkomsten_categories_combobox = self.builder.get_object("Categories_Combobox")
+        self.opkomsten_search_entry = self.builder.get_object("Opkomsten_Searchwords_Entry")
+        self.opkomsten_speltaken_combobox = self.builder.get_object("Opkomsten_Speltakken_Combobox")
+        self.opkomsten_categories_combobox = self.builder.get_object("Opkomsten_Categories_Combobox")
 
         self.opkomsten_speltaken_combobox.current(0)
         self.opkomsten_categories_combobox.current(0)

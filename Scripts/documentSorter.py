@@ -82,7 +82,10 @@ def getDocumentData(file_path):
             for i in range(len(keys)):
                 fullText = []
                 for paragraph in table.column_cells(1)[i].paragraphs:
-                    fullText.append(paragraph.text.replace("\n", "").replace(",", "\n"))
+                    if keys[i] == "Omschrijving":
+                        fullText.append(paragraph.text)
+                    else:
+                        fullText.append(paragraph.text.replace("\n", "").replace(",", "\n"))
 
                 fullText = "\n".join(fullText)
 

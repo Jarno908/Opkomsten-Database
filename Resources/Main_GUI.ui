@@ -124,7 +124,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Label" id="Searchwords_Label">
+                          <object class="ttk.Label" id="Opkomsten_Searchwords_Label">
                             <property name="text" translatable="yes">Zoeken:</property>
                             <layout>
                               <property name="column">0</property>
@@ -135,7 +135,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Entry" id="Searchwords_Entry">
+                          <object class="ttk.Entry" id="Opkomsten_Searchwords_Entry">
                             <property name="justify">left</property>
                             <property name="state">normal</property>
                             <layout>
@@ -148,7 +148,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Label" id="Speltakken_Label">
+                          <object class="ttk.Label" id="Opkomsten_Speltakken_Label">
                             <property name="text" translatable="yes">Speltak:</property>
                             <layout>
                               <property name="column">0</property>
@@ -159,7 +159,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Combobox" id="Speltakken_Combobox">
+                          <object class="ttk.Combobox" id="Opkomsten_Speltakken_Combobox">
                             <property name="validate">none</property>
                             <property name="values">Alle Bevers Welpen Verkenners Explorers Roverscouts Stam +Scouts Overig</property>
                             <layout>
@@ -172,7 +172,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Label" id="Categories_Label">
+                          <object class="ttk.Label" id="Opkomsten_Categories_Label">
                             <property name="text" translatable="yes">Spelgebied:</property>
                             <layout>
                               <property name="column">0</property>
@@ -183,7 +183,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Combobox" id="Categories_Combobox">
+                          <object class="ttk.Combobox" id="Opkomsten_Categories_Combobox">
                             <property name="values">Alle Buitenleven Expressie Identiteit Internationaal Samenleving "Sport &amp; Spel" "Uitdagende Scoutingtechnieken" "Veilig &amp; Gezond" Overig</property>
                             <layout>
                               <property name="column">1</property>
@@ -195,7 +195,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="ttk.Button" id="Button_Speltakken">
+                          <object class="ttk.Button" id="Opkomsten_Button">
                             <property name="command">opkomsten_button_pressed</property>
                             <property name="text" translatable="yes">Zoeken</property>
                             <layout>
