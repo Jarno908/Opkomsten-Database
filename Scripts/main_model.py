@@ -61,6 +61,14 @@ class MainModel():
         log.info("{} files failed to insert into database".format(len(database_results)))
         q.put([upload_results, database_results])
 
+    def SearchDocuments(self, type, search_info, q):
+        result = []
+
+        if type == "opkomst":
+            result = self.database_shell.get_opkomsten(search_info)
+
+        q.put(result)
+
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
             self.config.write(configfile)
