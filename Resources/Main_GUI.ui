@@ -674,4 +674,19 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
       </object>
     </child>
   </object>
+  <object class="pygubu.builder.widgets.dialog" id="Info_Window">
+    <property name="borderwidth">5</property>
+    <property name="height">100</property>
+    <property name="modal">false</property>
+    <property name="width">200</property>
+    <child>
+      <object class="customappwidgets.customScrolledFrameWidget" id="Info_Frame">
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+  </object>
 </interface>

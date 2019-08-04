@@ -58,7 +58,7 @@ class Opkomst(Document):
         "Speltak: ":", ".join(self.speltakken),
         "Categorie: ":self.categorie,
         "Omschrijving: ":self.omschrijving,
-        "Materiaal: ":self.materiaal,
+        "Materiaal: ":"\n".join(self.materiaal),
         "Uploader: ":self.uploader_name,
         "Bestandpad: ":self.file_path
         }
