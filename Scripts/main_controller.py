@@ -13,6 +13,7 @@ import queue
 from PIL import Image, ImageTk
 from itertools import cycle
 from documents_frame import DocumentsFrame
+from large_info_frame import InfoFrame
 
 class MyApplication:
 
@@ -48,6 +49,7 @@ class MyApplication:
         self.update_tab_init()
         self.settings_tab_init()
         self.items_window_init()
+        self.info_window_init()
 
         if self.model.credentials_config_path.exists() == False:
             self.master.withdraw()
@@ -65,16 +67,8 @@ class MyApplication:
         self.master.mainloop()
 
     def opkomsten_button_pressed(self, event=None):
-        width_dif = self.mainwindow.winfo_reqwidth() - self.items_window.toplevel.winfo_reqwidth()
-        heigth_dif = self.mainwindow.winfo_reqheight() - self.items_window.toplevel.winfo_reqheight()
-        pos_x = int(self.master.winfo_x() + width_dif / 2)
-        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
-        self.items_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
-
         for child in self.items_frame.interior.winfo_children():
             child.destroy()
-
-        self.items_frame.canvas.yview_moveto(0.011)
 
         search_string = self.opkomsten_search_entry.get().strip()
         search_speltak = self.opkomsten_speltaken_combobox.get()
@@ -99,13 +93,65 @@ class MyApplication:
         self.loading_loop()
 
     def post_document_search(self):
-        documents = self.q.get()
+        self.current_documents = self.q.get()
         display_data = []
-        for document in documents:
+        for document in self.current_documents:
             display_data.append(document.small_info())
-        DocumentsFrame(self.items_frame.interior, display_data)
+        DocumentsFrame(self.items_frame.interior, display_data, self.display_info, self.download_button_pressed)
+
+        width_dif = self.mainwindow.winfo_reqwidth() - self.items_window.toplevel.winfo_reqwidth()
+        heigth_dif = self.mainwindow.winfo_reqheight() - self.items_window.toplevel.winfo_reqheight()
+        pos_x = int(self.master.winfo_x() + width_dif / 2)
+        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
+        self.items_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
+
+        self.items_frame.canvas.yview_moveto(0)
 
         self.items_window.run()
+
+    def display_info(self, idx):
+        for child in self.info_frame.interior.winfo_children():
+            child.destroy()
+
+        InfoFrame(self.info_frame.interior, self.current_documents[idx].all_info())
+
+        width_dif = self.mainwindow.winfo_reqwidth() - self.info_window.toplevel.winfo_reqwidth()
+        heigth_dif = self.mainwindow.winfo_reqheight() - self.info_window.toplevel.winfo_reqheight()
+        pos_x = int(self.master.winfo_x() + width_dif / 2)
+        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
+        self.info_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
+
+        self.info_frame.canvas.yview_moveto(0)
+
+        self.info_window.run()
+
+    def download_button_pressed(self, idx):
+        self.q = queue.Queue()
+        self.thread1 = threading.Thread(target=self.model.download_files, args=[[self.current_documents[idx]], self.q])
+        self.thread1.daemon = True
+        self.thread1.start()
+
+        self.loading_window_setup("Downloaden")
+        self.loading_window.run()
+
+        self.post_loading_method = self.post_downloading
+
+        self.loading_loop()
+
+    def post_downloading(self):
+        results = self.q.get()
+
+        if len(results[1]) > 0:
+            message = "{} documenten konden niet gedownload worden.\n\nNiet gedownload:\n".format(len(results[1]))
+            for url in results[1]:
+                message = message + url + "\n"
+            messagebox.showwarning("Downloaden svoltooid",
+                                message,
+                                parent=self.mainwindow)
+        else:
+            messagebox.showinfo("Downloaden voltooid",
+                                "Alle documenten zijn succesvol gedownload.",
+                                parent=self.mainwindow)
 
     def upload_path_changed(self, event=None):
         files = self.master.tk.splitlist(self.upload_pathchooser.cget("path"))
@@ -259,6 +305,10 @@ class MyApplication:
     def items_window_init(self):
         self.items_window = self.builder.get_object("Items_Window", self.mainwindow)
         self.items_frame = self.builder.get_object("Items_Frame", self.mainwindow)
+
+    def info_window_init(self):
+        self.info_window = self.builder.get_object("Info_Window", self.mainwindow)
+        self.info_frame = self.builder.get_object("Info_Frame", self.mainwindow)
 
 
 if __name__ == "__main__":
