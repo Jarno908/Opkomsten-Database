@@ -41,3 +41,24 @@ class Opkomst(Document):
         searchwords = doc_info["Zoekwoorden"].split("\n")
         for word in searchwords:
             self.zoekwoorden.append(word.strip())
+
+    def small_info(self):
+        return {
+        "Titel:":self.titel,
+        "Speltak:":", ".join(self.speltakken),
+        "Categorie:":self.categorie,
+        "Omschrijving:":self.omschrijving
+        }
+
+    def all_info(self):
+        return {
+        "Titel: ":self.titel,
+        "Auteur(s): ":self.auteurs,
+        "Datum: ":self.datum,
+        "Speltak: ":", ".join(self.speltakken),
+        "Categorie: ":self.categorie,
+        "Omschrijving: ":self.omschrijving,
+        "Materiaal: ":"\n".join(self.materiaal),
+        "Uploader: ":self.uploader_name,
+        "Bestandpad: ":self.file_path
+        }

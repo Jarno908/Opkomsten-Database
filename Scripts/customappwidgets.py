@@ -1,5 +1,6 @@
 from pygubu import BuilderObject, register_widget, register_property
 from custompathchooser import CustomPathChooser
+from customscrolledframe import VerticalScrolledFrame
 
 
 class CustomPathChooserWidgetBuilder(BuilderObject):
@@ -37,3 +38,9 @@ props = {
 
 for p in props:
     register_property(p, props[p])
+
+class CustomScrolledFrameWidgetBuilder(BuilderObject):
+    class_ = VerticalScrolledFrame
+
+register_widget('customappwidgets.customScrolledFrameWidget', CustomScrolledFrameWidgetBuilder,
+                    'CustomScrolledFrameWidget', ('ttk', 'customapp'))

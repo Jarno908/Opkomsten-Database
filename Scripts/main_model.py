@@ -61,6 +61,24 @@ class MainModel():
         log.info("{} files failed to insert into database".format(len(database_results)))
         q.put([upload_results, database_results])
 
+    def SearchDocuments(self, type, search_info, q):
+        result = []
+
+        if type == "opkomst":
+            result = self.database_shell.get_opkomsten(search_info)
+
+        q.put(result)
+
+    def download_files(self, document_list, q):
+        file_id_list = {}
+
+        for document in document_list:
+            fname = document.file_path.split("/")[-1]
+            file_id_list[document.storage_id] = fname
+
+        results = self.pCloud_shell.download_files(file_id_list, self.config["Preferences"]["download_directory"])
+        q.put(results)
+
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
             self.config.write(configfile)

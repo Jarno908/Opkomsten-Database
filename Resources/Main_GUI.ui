@@ -23,6 +23,9 @@
               <property name="sticky">nsew</property>
               <rows>
                 <row id="0">
+                  <property name="weight">0</property>
+                </row>
+                <row id="1">
                   <property name="weight">1</property>
                 </row>
               </rows>
@@ -33,14 +36,193 @@
               </columns>
             </layout>
             <child>
-              <object class="ttk.Label" id="Label_Temp">
-                <property name="font">{DejaVu Sans} 16 {bold}</property>
-                <property name="text" translatable="yes">Hier komt de zoekmogelijkheid.
-</property>
+              <object class="ttk.Notebook" id="FileSearcher_Notebook">
+                <property name="height">200</property>
+                <property name="width">200</property>
                 <layout>
                   <property name="column">0</property>
                   <property name="propagate">True</property>
+                  <property name="row">1</property>
+                  <property name="sticky">nsew</property>
+                </layout>
+                <child>
+                  <object class="ttk.Notebook.Tab" id="Opkomst_tab">
+                    <property name="sticky">nsew</property>
+                    <property name="text" translatable="yes">Opkomsten</property>
+                    <child>
+                      <object class="ttk.Frame" id="Frame_Opkomst">
+                        <property name="height">200</property>
+                        <property name="width">200</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">nsew</property>
+                          <rows>
+                            <row id="2">
+                              <property name="weight">0</property>
+                            </row>
+                            <row id="3">
+                              <property name="weight">1</property>
+                            </row>
+                            <row id="4">
+                              <property name="weight">1</property>
+                            </row>
+                            <row id="5">
+                              <property name="weight">1</property>
+                            </row>
+                            <row id="6">
+                              <property name="weight">2</property>
+                            </row>
+                          </rows>
+                          <columns>
+                            <column id="0">
+                              <property name="weight">1</property>
+                            </column>
+                            <column id="1">
+                              <property name="weight">6</property>
+                            </column>
+                          </columns>
+                        </layout>
+                        <child>
+                          <object class="ttk.Label" id="Opkomsten_Title">
+                            <property name="font">{DejaVu Sans} 14 {bold}</property>
+                            <property name="justify">center</property>
+                            <property name="text" translatable="yes">Hier kun je naar opkomsten zoeken.</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="columnspan">2</property>
+                              <property name="pady">5</property>
+                              <property name="propagate">True</property>
+                              <property name="row">0</property>
+                              <property name="sticky">n</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Label" id="Opkomsten_Description">
+                            <property name="text" translatable="yes">Hier kun je opkomsten opzoeken.</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="columnspan">2</property>
+                              <property name="pady">5</property>
+                              <property name="propagate">True</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Separator" id="Separator_4">
+                            <property name="orient">horizontal</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="columnspan">2</property>
+                              <property name="propagate">True</property>
+                              <property name="row">2</property>
+                              <property name="sticky">new</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Label" id="Opkomsten_Searchwords_Label">
+                            <property name="text" translatable="yes">Zoeken:</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="propagate">True</property>
+                              <property name="row">3</property>
+                              <property name="sticky">e</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Entry" id="Opkomsten_Searchwords_Entry">
+                            <property name="justify">left</property>
+                            <property name="state">normal</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="padx">50</property>
+                              <property name="propagate">True</property>
+                              <property name="row">3</property>
+                              <property name="sticky">ew</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Label" id="Opkomsten_Speltakken_Label">
+                            <property name="text" translatable="yes">Speltak:</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="propagate">True</property>
+                              <property name="row">4</property>
+                              <property name="sticky">e</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Combobox" id="Opkomsten_Speltakken_Combobox">
+                            <property name="validate">none</property>
+                            <property name="values">Alle Bevers Welpen Verkenners Explorers Roverscouts Stam +Scouts Overig</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="padx">50</property>
+                              <property name="propagate">True</property>
+                              <property name="row">4</property>
+                              <property name="sticky">w</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Label" id="Opkomsten_Categories_Label">
+                            <property name="text" translatable="yes">Spelgebied:</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="propagate">True</property>
+                              <property name="row">5</property>
+                              <property name="sticky">e</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Combobox" id="Opkomsten_Categories_Combobox">
+                            <property name="values">Alle Buitenleven Expressie Identiteit Internationaal Samenleving "Sport &amp; Spel" "Uitdagende Scoutingtechnieken" "Veilig &amp; Gezond" Overig</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="padx">50</property>
+                              <property name="propagate">True</property>
+                              <property name="row">5</property>
+                              <property name="sticky">w</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="ttk.Button" id="Opkomsten_Button">
+                            <property name="command">opkomsten_button_pressed</property>
+                            <property name="text" translatable="yes">Zoeken</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="columnspan">2</property>
+                              <property name="ipadx">40</property>
+                              <property name="ipady">20</property>
+                              <property name="propagate">True</property>
+                              <property name="row">6</property>
+                            </layout>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Separator" id="Separator_5">
+                <property name="orient">horizontal</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="pady">2</property>
+                  <property name="propagate">True</property>
                   <property name="row">0</property>
+                  <property name="sticky">ew</property>
                 </layout>
               </object>
             </child>
@@ -90,7 +272,6 @@
               <object class="ttk.Label" id="Upload_Title">
                 <property name="cursor">based_arrow_down</property>
                 <property name="font">{DejaVu Sans} 14 {bold}</property>
-                <property name="takefocus">true</property>
                 <property name="text" translatable="yes">Documenten Uploaden</property>
                 <layout>
                   <property name="column">0</property>
@@ -213,7 +394,6 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
               <object class="ttk.Label" id="Update_Title">
                 <property name="cursor">based_arrow_down</property>
                 <property name="font">{DejaVu Sans} 14 {bold}</property>
-                <property name="takefocus">true</property>
                 <property name="text" translatable="yes">Documenten Updaten</property>
                 <layout>
                   <property name="column">0</property>
@@ -228,7 +408,7 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
               <object class="ttk.Label" id="Update_Description">
                 <property name="justify">center</property>
                 <property name="text" translatable="yes">Hier kun je een document dat je al eerder hebt geupload updaten naar een nieuwere versie.
-(De vorige versie wordt gedelete!!!)</property>
+(De vorige oude versie wordt gedelete!!!)</property>
                 <property name="wraplength">700</property>
                 <layout>
                   <property name="column">0</property>
@@ -269,7 +449,7 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
               <object class="ttk.Button" id="Button_Update">
                 <property name="command">update_button_pressed</property>
                 <property name="state">disabled</property>
-                <property name="text" translatable="yes">Uploaden</property>
+                <property name="text" translatable="yes">Update</property>
                 <layout>
                   <property name="column">0</property>
                   <property name="ipadx">10</property>
@@ -437,14 +617,14 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
     </child>
   </object>
   <object class="pygubu.builder.widgets.dialog" id="Loading_Window">
-    <property name="cursor">arrow</property>
     <property name="height">100</property>
+    <property name="minsize">200|0</property>
     <property name="modal">false</property>
     <property name="resizable">both</property>
     <property name="width">200</property>
     <child>
       <object class="ttk.Frame" id="Loading_Frame">
-        <property name="height">200</property>
+        <property name="height">100</property>
         <property name="width">200</property>
         <layout>
           <property name="column">0</property>
@@ -471,10 +651,41 @@ Vervolgens klik op "Uploaden" om de documenten te uploaden.</property>
               <property name="column">0</property>
               <property name="propagate">True</property>
               <property name="row">0</property>
-              <property name="sticky">nsew</property>
+              <property name="sticky">w</property>
             </layout>
           </object>
         </child>
+      </object>
+    </child>
+  </object>
+  <object class="pygubu.builder.widgets.dialog" id="Items_Window">
+    <property name="height">200</property>
+    <property name="modal">false</property>
+    <property name="resizable">vertically</property>
+    <property name="width">200</property>
+    <child>
+      <object class="customappwidgets.customScrolledFrameWidget" id="Items_Frame">
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">nsew</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+  <object class="pygubu.builder.widgets.dialog" id="Info_Window">
+    <property name="borderwidth">5</property>
+    <property name="height">100</property>
+    <property name="modal">false</property>
+    <property name="width">200</property>
+    <child>
+      <object class="customappwidgets.customScrolledFrameWidget" id="Info_Frame">
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
       </object>
     </child>
   </object>

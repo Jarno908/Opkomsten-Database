@@ -26,14 +26,6 @@ class Document():
         self.uploader_name = doc_info["Uploader_Name"]
         self.template_version = doc_info["version"]
 
-        input_date = doc_info["Datum"].strip()
-        try:
-            output_date = datetime.strptime(input_date, "%d-%m-%Y").date()
-        except:
-            output_date = date.today()
-
-        self.datum = str(output_date)
-
         if (from_database == True):
             self.database_init(doc_info)
         else:
@@ -42,10 +34,42 @@ class Document():
     def sorter_init(self, doc_info):
         self.local_path = doc_info["local_path"]
 
+        input_date = doc_info["Datum"].strip()
+        try:
+            output_date = datetime.strptime(input_date, "%d-%m-%Y").date()
+        except:
+            output_date = date.today()
+
+        self.datum = str(output_date)
+
     def database_init(self, doc_info):
         self.file_path = doc_info["filepath"]
         self.storage_id = int(doc_info["storage_id"])
 
+        input_date = doc_info["Datum"]
+        try:
+            output_date = datetime.strptime(input_date, "%Y-%m-%d").date()
+        except:
+            output_date = date.today()
+
+        self.datum = str(output_date)
+
     def __repr__(self):
         from pprint import pformat
         return pformat(vars(self), indent=4, width=100)
+
+    def small_info(self):
+        return {
+        "Titel: ":self.titel,
+        "Auteur(s): ":self.auteurs,
+        "Datum: ":self.datum
+        }
+
+    def all_info(self):
+        return {
+        "Titel: ":self.titel,
+        "Auteur(s): ":self.auteurs,
+        "Datum: ":self.datum,
+        "Uploader: ":self.uploader_name,
+        "Bestandpad: ":self.file_path
+        }
