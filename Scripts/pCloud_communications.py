@@ -69,10 +69,15 @@ class pCloud_shell():
                 try:
                     result = pc.file_open(flags=[0x0400], fileid=int(file_id))
                     file_path = Path(download_directory).joinpath(fname)
-                    log.debug(result)
-                    log.debug(file_id)
+
+                    idx = 1
+                    while file_path.exists() == True:
+                        file_path = Path(download_directory).joinpath(str(Path(fname).stem) + "({})".format(idx) + str(Path(fname).suffix))
+                        idx += 1
+
                     with open(str(file_path), "wb") as f:
                         f.write(pc.file_read(fd=result["fd"], count=sys.maxsize))
+
                     succesfull_downloads.append(fname)
                 except Exception as e:
                     log.warning(e)
