@@ -30,7 +30,7 @@ class Opkomst(Document):
         for group in groups:
             self.speltakken.append(constants.SPELTAKKEN_DICTIONARY.get(group.strip(), "Overig"))
 
-        self.categorie = constants.CATEGORIES_DICTIONARY.get(doc_info["Categorie"], "Overig")
+        self.categorie = constants.CATEGORIES_DICTIONARY.get(doc_info["Categorie"].strip(), "Overig")
 
         self.omschrijving = doc_info["Omschrijving"]
 
@@ -53,7 +53,7 @@ class Opkomst(Document):
     def all_info(self):
         return {
         "Titel: ":self.titel,
-        "Auteur(s): ":self.auteurs,
+        "Auteur(s): ":", ".join(self.auteurs),
         "Datum: ":self.datum,
         "Speltak: ":", ".join(self.speltakken),
         "Categorie: ":self.categorie,

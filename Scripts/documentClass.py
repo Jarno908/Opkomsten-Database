@@ -68,7 +68,7 @@ class Document():
     def all_info(self):
         return {
         "Titel: ":self.titel,
-        "Auteur(s): ":self.auteurs,
+        "Auteur(s): ":", ".join(self.auteurs),
         "Datum: ":self.datum,
         "Uploader: ":self.uploader_name,
         "Bestandpad: ":self.file_path

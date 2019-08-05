@@ -26,7 +26,7 @@ def DocumentsFrame(parent, items, display_method, download_method):
             i = 1
             for key, value in item.items():
                 ttk.Label(item_frame, text=key).grid(row=i, column=0, padx=5)
-                ttk.Label(item_frame, text=value, width=35, wraplength=300).grid(row=i, column=1)
+                ttk.Label(item_frame, text=value, width=50, wraplength=300).grid(row=i, column=1)
                 i += 1
 
             item_frame.pack(fill=tk.X, padx=20)
