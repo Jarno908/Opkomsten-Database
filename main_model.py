@@ -14,7 +14,7 @@ import base64
 
 class MainModel():
 
-    default_config_path = Path(".").resolve().parent.joinpath("Resources" ,"default_config.ini")
+    default_config_path = Path(".").resolve().joinpath("Resources" ,"default_config.ini")
     personal_config_path = Path().home().joinpath("ScoutingDocumentenApp", "personal_config.ini")
     config = configparser.RawConfigParser(delimiters=(':'))
 

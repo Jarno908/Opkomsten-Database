@@ -3,10 +3,10 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
+import main_model
 import tkinter as tk
 from tkinter import messagebox
 import pygubu
-import main_model
 from pathlib2 import Path
 import threading
 import queue
@@ -17,9 +17,9 @@ from large_info_frame import InfoFrame
 
 class MyApplication:
 
-    ui_file_path = Path(".").resolve().parent.joinpath("Resources", "Main_GUI.ui")
+    ui_file_path = Path(".").resolve().joinpath("Resources", "Main_GUI.ui")
     home_path = Path.home()
-    reggegroep_logo_200px_path = Path(".").resolve().parent.joinpath("Resources", "Images", "Reggegroep_logo_200px.png")
+    reggegroep_logo_200px_path = Path(".").resolve().joinpath("Resources", "Images", "Reggegroep_logo_200px.png")
 
     timer_id = None
 
