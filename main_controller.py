@@ -20,6 +20,7 @@ class MyApplication:
     ui_file_path = Path(".").resolve().joinpath("Resources", "Main_GUI.ui")
     home_path = Path.home()
     reggegroep_logo_200px_path = Path(".").resolve().joinpath("Resources", "Images", "Reggegroep_logo_200px.png")
+    reggegroep_icon = Path(".").resolve().joinpath("Resources", "app_icon_color.ico")
 
     timer_id = None
 
@@ -35,6 +36,7 @@ class MyApplication:
         builder.connect_callbacks(self)
         self.master.title("Reggegroep Documenten Beheer")
         self.master.protocol("WM_DELETE_WINDOW", self.quit)
+        self.master.iconbitmap(str(self.reggegroep_icon))
 
         windowWidth = self.mainwindow.winfo_reqwidth()
         windowHeight = self.mainwindow.winfo_reqheight()
@@ -296,6 +298,7 @@ class MyApplication:
 
     def loading_window_init(self):
         self.loading_window = self.builder.get_object("Loading_Window", self.mainwindow)
+        self.loading_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.loading_label = self.builder.get_object("Loading_Label")
 
     def load_images_init(self):
@@ -304,10 +307,12 @@ class MyApplication:
 
     def items_window_init(self):
         self.items_window = self.builder.get_object("Items_Window", self.mainwindow)
+        self.items_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.items_frame = self.builder.get_object("Items_Frame", self.mainwindow)
 
     def info_window_init(self):
         self.info_window = self.builder.get_object("Info_Window", self.mainwindow)
+        self.info_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.info_frame = self.builder.get_object("Info_Frame", self.mainwindow)
 
 
