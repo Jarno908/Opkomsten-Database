@@ -145,12 +145,12 @@ class MyApplication:
             message = "{} documenten konden niet gedownload worden.\n\nNiet gedownload:\n".format(len(results[1]))
             for url in results[1]:
                 message = message + url + "\n"
-            messagebox.showwarning("Downloaden svoltooid",
+            messagebox.showwarning("Downloaden voltooid",
                                 message,
                                 parent=self.mainwindow)
         else:
             messagebox.showinfo("Downloaden voltooid",
-                                "Alle documenten zijn succesvol gedownload.",
+                                "Alle documenten zijn succesvol gedownload.\n\nDownloadfolder:\n{}".format(self.model.config["Preferences"]["download_directory"]),
                                 parent=self.mainwindow)
 
     def upload_path_changed(self, event=None):
