@@ -10,4 +10,5 @@ hiddenimports= ['constants',
 				'documentSorter', 
 				'large_info_frame',
 				'opkomst_module',
-				'pCloud_communications']
+				'pCloud_communications',
+				'resources']

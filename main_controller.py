@@ -14,13 +14,14 @@ from PIL import Image, ImageTk
 from itertools import cycle
 from documents_frame import DocumentsFrame
 from large_info_frame import InfoFrame
+from resources import ResourcePath
 
 class MyApplication:
 
-    ui_file_path = Path(".").resolve().joinpath("Resources", "Main_GUI.ui")
+    ui_file_path = ResourcePath(str(Path("Resources").joinpath("Main_GUI.ui")))
     home_path = Path.home()
-    reggegroep_logo_200px_path = Path(".").resolve().joinpath("Resources", "Images", "Reggegroep_logo_200px.png")
-    reggegroep_icon = Path(".").resolve().joinpath("Resources", "app_icon_color.ico")
+    reggegroep_logo_200px_path = ResourcePath(str(Path("Resources").joinpath("Images", "Reggegroep_logo_200px.png")))
+    reggegroep_icon = ResourcePath(str(Path("Resources").joinpath("app_icon_color.ico")))
 
     timer_id = None
 
