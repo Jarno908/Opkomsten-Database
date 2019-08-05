@@ -53,7 +53,7 @@ class Opkomst(Document):
     def all_info(self):
         return {
         "Titel: ":self.titel,
-        "Auteur(s): ":self.auteurs,
+        "Auteur(s): ":", ".join(self.auteurs),
         "Datum: ":self.datum,
         "Speltak: ":", ".join(self.speltakken),
         "Categorie: ":self.categorie,
