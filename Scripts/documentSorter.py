@@ -26,7 +26,6 @@ def sort(files_list):
         if file.suffix == ".docx":
             log.info("Currently being sorted: {}".format(file))
             document_data = getDocumentData(str(file))
-            #pprint(document_data)
 
             if isinstance(document_data, documentClass.Document) and document_data.template_version != 0:
                 log.info("Document uses {}{} format".format(document_data.document_type, document_data.template_version))
@@ -37,16 +36,18 @@ def sort(files_list):
                     raise Exception("Not a supported document-type!")
 
                 if document_data.titel != "":
-                    custom_path = custom_path.joinpath(document_data.titel)
+                    custom_path = "/".join([custom_path, document_data.titel])
                 else:
-                    custom_path = custom_path.joinpath(file.stem)
+                    custom_path = "/".join([custom_path, str(file.stem)])
 
-                custom_path = custom_path.with_suffix(".docx")
+                custom_path += str(file.suffix)
+                log.debug("Custompath = {}".format(custom_path))
+
                 document_data.file_path = str(custom_path)
                 sorted_documents.append(document_data)
 
             else:
-                log.debug("File {} does not use a valid template".format(file.name))
+                log.warning("File {} does not use a valid template".format(file.name))
 
     return sorted_documents
 
@@ -111,16 +112,16 @@ def getDocumentData(file_path):
             return None
 
 def opkomstPath(document_data):
-    custom_path = Path("/Documenten Reggegroep/Opkomsten")
+    custom_path = "/Documenten Reggegroep/Opkomsten"
 
     if document_data.speltakken[0] in constants.SPELTAKKEN:
-        custom_path = custom_path.joinpath(document_data.speltakken[0])
+        custom_path = "/".join([custom_path, document_data.speltakken[0]])
     else:
-        custom_path = custom_path.joinpath("Overig")
+        custom_path = "/".join([custom_path, "Overig"])
 
     if document_data.categorie in constants.CATEGORIES:
-        custom_path = custom_path.joinpath(document_data.categorie)
+        custom_path = "/".join([custom_path, document_data.categorie])
     else:
-        custom_path = custom_path.joinpath("Overig")
+        custom_path = "/".join([custom_path, "Overig"])
 
     return custom_path

@@ -242,7 +242,7 @@ class MyApplication:
         results = self.q.get()
 
         if len(results[0][1]) > 0:
-            message = "{} kon niet geupdate worden".format(str(Path(results[0][1].local_path).name))
+            message = "{} kon niet geupdate worden".format(str(Path(results[0][1][0].local_path).name))
             messagebox.showwarning("Update voltooid",
                                 message,
                                 parent=self.mainwindow)

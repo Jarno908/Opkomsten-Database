@@ -23,25 +23,28 @@ class pCloud_shell():
         else:
             for file in file_list:
                 try:
-                    file_path = Path(file.file_path)
-                    log.info("Currently trying to upload {}".format(file_path))
+                    file_path_parts = file.file_path.split("/")
+                    file_directory = "/".join(file_path_parts[:-1])
+                    file_name = file_path_parts[-1]
+
+                    log.info("Currently trying to upload {}".format(file.file_path))
                     file_data = open(file.local_path, "rb")
 
                     if replace == True:
-                        result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file_data)
+                        result = pc.uploadfile(path=file_directory, filename=file_name, data=file_data)
                         file.storage_id = result["fileids"][0]
                         uploaded_files.append(file)
                     else:
-                        directory_list = pc.listfolder(path=file_path.parent)
+                        directory_list = pc.listfolder(path=file_directory)
                         directory_names = []
                         for content in directory_list["metadata"]["contents"]:
                             directory_names.append(content["name"])
 
-                        if file_path.name in directory_names:
+                        if file_name in directory_names:
                             log.warning("file already exist in directory!")
                             failed_files.append(file)
                         else:
-                            result = pc.uploadfile(path=file_path.parent, filename=file_path.name, data=file_data)
+                            result = pc.uploadfile(path=file_directory, filename=file_name, data=file_data)
                             file.storage_id = result["fileids"][0]
                             uploaded_files.append(file)
                 except Exception as e:
