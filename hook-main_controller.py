@@ -9,6 +9,7 @@ hiddenimports= ['constants',
 				'documents_frame', 
 				'documentSorter', 
 				'large_info_frame',
+				'main_model',
 				'opkomst_module',
 				'pCloud_communications',
 				'resources']

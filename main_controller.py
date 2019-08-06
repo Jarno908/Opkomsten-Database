@@ -220,7 +220,7 @@ class MyApplication:
     def loading_loop(self):
         if self.thread1.isAlive() == True:
             self.loading_label.config(text=next(self.loading_text_loop))
-            self.timer_id = root.after(100, self.loading_loop)
+            self.timer_id = self.master.after(100, self.loading_loop)
         else:
             self.loading_window.close()
             if self.post_loading_method != None:
@@ -317,7 +317,7 @@ class MyApplication:
         self.info_frame = self.builder.get_object("Info_Frame", self.mainwindow)
 
 
-if __name__ == "__main__":
+def main():
     root = tk.Tk()
     app = MyApplication(root)
     app.run()
