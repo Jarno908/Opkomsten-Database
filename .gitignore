@@ -4,6 +4,7 @@ Test_Input/
 Test_Output/
 GUI/
 Resources/Images
+Builds/
 
 #Exclude Python Cache folders
 **/__pycache__
