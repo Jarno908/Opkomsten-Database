@@ -3,10 +3,10 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 log = logging.getLogger(__name__)
 
+import main_model
 import tkinter as tk
 from tkinter import messagebox
 import pygubu
-import main_model
 from pathlib2 import Path
 import threading
 import queue
@@ -14,12 +14,14 @@ from PIL import Image, ImageTk
 from itertools import cycle
 from documents_frame import DocumentsFrame
 from large_info_frame import InfoFrame
+from resources import ResourcePath
 
 class MyApplication:
 
-    ui_file_path = Path(".").resolve().parent.joinpath("Resources", "Main_GUI.ui")
+    ui_file_path = ResourcePath(str(Path("Resources").joinpath("Main_GUI.ui")))
     home_path = Path.home()
-    reggegroep_logo_200px_path = Path(".").resolve().parent.joinpath("Resources", "Images", "Reggegroep_logo_200px.png")
+    reggegroep_logo_200px_path = ResourcePath(str(Path("Resources").joinpath("Images", "Reggegroep_logo_200px.png")))
+    reggegroep_icon = ResourcePath(str(Path("Resources").joinpath("app_icon_color.ico")))
 
     timer_id = None
 
@@ -35,6 +37,7 @@ class MyApplication:
         builder.connect_callbacks(self)
         self.master.title("Reggegroep Documenten Beheer")
         self.master.protocol("WM_DELETE_WINDOW", self.quit)
+        self.master.iconbitmap(str(self.reggegroep_icon))
 
         windowWidth = self.mainwindow.winfo_reqwidth()
         windowHeight = self.mainwindow.winfo_reqheight()
@@ -217,7 +220,7 @@ class MyApplication:
     def loading_loop(self):
         if self.thread1.isAlive() == True:
             self.loading_label.config(text=next(self.loading_text_loop))
-            self.timer_id = root.after(100, self.loading_loop)
+            self.timer_id = self.master.after(100, self.loading_loop)
         else:
             self.loading_window.close()
             if self.post_loading_method != None:
@@ -296,6 +299,7 @@ class MyApplication:
 
     def loading_window_init(self):
         self.loading_window = self.builder.get_object("Loading_Window", self.mainwindow)
+        self.loading_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.loading_label = self.builder.get_object("Loading_Label")
 
     def load_images_init(self):
@@ -304,14 +308,16 @@ class MyApplication:
 
     def items_window_init(self):
         self.items_window = self.builder.get_object("Items_Window", self.mainwindow)
+        self.items_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.items_frame = self.builder.get_object("Items_Frame", self.mainwindow)
 
     def info_window_init(self):
         self.info_window = self.builder.get_object("Info_Window", self.mainwindow)
+        self.info_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.info_frame = self.builder.get_object("Info_Frame", self.mainwindow)
 
 
-if __name__ == "__main__":
+def main():
     root = tk.Tk()
     app = MyApplication(root)
     app.run()

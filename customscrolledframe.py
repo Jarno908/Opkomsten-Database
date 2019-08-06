@@ -36,7 +36,7 @@ class VerticalScrolledFrame(ttk.Frame):
         This is the code for scrolling the window
         """
 
-        def _on_mousewheel(event, scroll):
+        def _on_mousewheel(event, scroll=0):
             if self.os_name == "Windows":
                 canvas.yview_scroll(int(-1*(event.delta/120)), "units")
             elif self.os_name == "Linux":
