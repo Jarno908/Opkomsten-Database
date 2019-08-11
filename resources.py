@@ -8,10 +8,10 @@ import sys
 
 def ResourcePath(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
+    if getattr( sys, 'frozen', False ) :
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = Path(str(sys._MEIPASS)).resolve()
-    except Exception:
+    else:
         base_path = Path(".")
 
     log.debug("base_path= {}".format(base_path))
