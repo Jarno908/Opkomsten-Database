@@ -10,12 +10,13 @@ import pCloud_communications
 import database_communications
 import base64
 from resources import ResourcePath
+import version_updater
 
 #logging.disable(logging.DEBUG)
 
 class MainModel():
 
-    default_config_path = ResourcePath(str(Path("Resources").joinpath("default_config.ini")))
+    default_config_path = Path(ResourcePath(str(Path("Resources").joinpath("default_config.ini"))))
     personal_config_path = Path().home().joinpath("ScoutingDocumentenApp", "personal_config.ini")
     config = configparser.RawConfigParser(delimiters=(':'))
 
@@ -41,11 +42,12 @@ class MainModel():
                 self.new_config()
         else:
             self.config.read(str(self.personal_config_path))
-            default_config = configparser.RawConfigParser()
+            default_config = configparser.RawConfigParser(delimiters=(':'))
             default_config.read(str(self.default_config_path))
             if int(default_config["Main"]["version"]) > int(self.config["Main"]["version"]):
                 with open(str(self.personal_config_path), "w") as configfile:
                     default_config.write(configfile)
+                self.config = default_config
                 log.info("Configfile updated to newer version")
                 self.new_config()
 
@@ -83,6 +85,7 @@ class MainModel():
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
             self.config.write(configfile)
+        log.debug("Saved Configfile")
 
     def credentials_setup(self):
         self.credentials = {}
@@ -95,3 +98,8 @@ class MainModel():
 
         self.pCloud_shell = pCloud_communications.pCloud_shell(self.credentials)
         self.database_shell = database_communications.database_shell(self.credentials)
+
+    def check_version(self):
+    	result = version_updater.check_new_version(self.config["Version"]["date"])
+
+    	return result

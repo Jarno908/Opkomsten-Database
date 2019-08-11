@@ -12,4 +12,5 @@ hiddenimports= ['constants',
 				'main_model',
 				'opkomst_module',
 				'pCloud_communications',
-				'resources']
+				'resources',
+				'version_updater']
