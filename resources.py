@@ -12,7 +12,7 @@ def ResourcePath(relative_path):
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = Path(str(sys._MEIPASS)).resolve()
     else:
-        base_path = Path(".")
+        base_path = Path(".").resolve()
 
     log.debug("base_path= {}".format(base_path))
     return str(base_path.joinpath(relative_path))
