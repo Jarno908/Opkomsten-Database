@@ -15,6 +15,9 @@ from itertools import cycle
 from documents_frame import DocumentsFrame
 from large_info_frame import InfoFrame
 from resources import ResourcePath
+import platform
+import webbrowser
+import constants
 
 class MyApplication:
 
@@ -35,9 +38,11 @@ class MyApplication:
         self.master.rowconfigure(0, weight=1)
         self.master.columnconfigure(0, weight=1)
         builder.connect_callbacks(self)
-        self.master.title("Reggegroep Documenten Beheer")
         self.master.protocol("WM_DELETE_WINDOW", self.quit)
         self.master.iconbitmap(str(self.reggegroep_icon))
+        self.master.title(constants.APP_TITLE)
+
+        self.mainwindow.update_idletasks()
 
         windowWidth = self.mainwindow.winfo_reqwidth()
         windowHeight = self.mainwindow.winfo_reqheight()
@@ -53,6 +58,7 @@ class MyApplication:
         self.settings_tab_init()
         self.items_window_init()
         self.info_window_init()
+        self.hypertext_window_init()
 
         if self.model.credentials_config_path.exists() == False:
             self.master.withdraw()
@@ -85,7 +91,6 @@ class MyApplication:
 
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SearchDocuments, args=["opkomst", search_info, self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Zoeken")
@@ -101,6 +106,8 @@ class MyApplication:
         for document in self.current_documents:
             display_data.append(document.small_info())
         DocumentsFrame(self.items_frame.interior, display_data, self.display_info, self.download_button_pressed)
+
+        self.items_window.toplevel.update_idletasks()
 
         width_dif = self.mainwindow.winfo_reqwidth() - self.items_window.toplevel.winfo_reqwidth()
         heigth_dif = self.mainwindow.winfo_reqheight() - self.items_window.toplevel.winfo_reqheight()
@@ -118,6 +125,8 @@ class MyApplication:
 
         InfoFrame(self.info_frame.interior, self.current_documents[idx].all_info())
 
+        self.info_window.toplevel.update_idletasks()
+
         width_dif = self.mainwindow.winfo_reqwidth() - self.info_window.toplevel.winfo_reqwidth()
         heigth_dif = self.mainwindow.winfo_reqheight() - self.info_window.toplevel.winfo_reqheight()
         pos_x = int(self.master.winfo_x() + width_dif / 2)
@@ -131,7 +140,6 @@ class MyApplication:
     def download_button_pressed(self, idx):
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.download_files, args=[[self.current_documents[idx]], self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Downloaden")
@@ -171,10 +179,9 @@ class MyApplication:
             files_list.append(Path(file))
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[files_list, self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
-        self.loading_window_setup("Uploading")
+        self.loading_window_setup("Uploaden")
         self.loading_window.run()
 
         self.post_loading_method = self.post_uploading
@@ -193,7 +200,6 @@ class MyApplication:
         file = Path(self.update_pathchooser.cget("path"))
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[[file], self.q, True])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Updating")
@@ -211,11 +217,14 @@ class MyApplication:
 
         self.loading_text_loop = cycle(loading_loop_text)
 
+        self.loading_window.toplevel.update_idletasks()
+
         width_dif = self.mainwindow.winfo_reqwidth() - self.loading_window.toplevel.winfo_reqwidth()
         heigth_dif = self.mainwindow.winfo_reqheight() - self.loading_window.toplevel.winfo_reqheight()
         pos_x = int(self.master.winfo_x() + width_dif / 2)
         pos_y = int(self.master.winfo_y() + heigth_dif / 3)
         self.loading_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
+        self.loading_window.toplevel.title(loading_text)
 
     def loading_loop(self):
         if self.thread1.isAlive() == True:
@@ -301,6 +310,7 @@ class MyApplication:
         self.loading_window = self.builder.get_object("Loading_Window", self.mainwindow)
         self.loading_window.toplevel.iconbitmap(str(self.reggegroep_icon))
         self.loading_label = self.builder.get_object("Loading_Label")
+        self.loading_window.toplevel.title("Loading")
 
     def load_images_init(self):
         self.logo_image = Image.open(str(self.reggegroep_logo_200px_path))
@@ -309,12 +319,44 @@ class MyApplication:
     def items_window_init(self):
         self.items_window = self.builder.get_object("Items_Window", self.mainwindow)
         self.items_window.toplevel.iconbitmap(str(self.reggegroep_icon))
-        self.items_frame = self.builder.get_object("Items_Frame", self.mainwindow)
+        self.items_frame = self.builder.get_object("Items_Frame")
+        self.items_window.toplevel.title("Gevonden documenten")
 
     def info_window_init(self):
         self.info_window = self.builder.get_object("Info_Window", self.mainwindow)
         self.info_window.toplevel.iconbitmap(str(self.reggegroep_icon))
-        self.info_frame = self.builder.get_object("Info_Frame", self.mainwindow)
+        self.info_frame = self.builder.get_object("Info_Frame")
+        self.info_window.toplevel.title("Informatie")
+
+    def hypertext_window_init(self):
+        self.hypertext_window = self.builder.get_object("HyperText_Window", self.mainwindow)
+        self.hypertext_window.toplevel.iconbitmap(str(self.reggegroep_icon))
+        self.hypertext_frame = self.builder.get_object("HyperText_Frame")
+        self.hypertext_window.toplevel.title("Nieuwe versie beschikbaar!")
+        self.hypertext_message = self.builder.get_object("HyperText_Message")
+        self.hypertext_link = self.builder.get_object("HyperText_Link")
+        self.hypertext_button = self.builder.get_object("HyperText_Button")
+        self.hypertext_button.config(command=self.close_hypertext_window)
+
+    def hypertext_show(self, title = "HyperText", message = "Dit is een link:", link = "www.google.com"):
+
+        self.hypertext_window.toplevel.title(title)
+        self.hypertext_message.config(text=message)
+        self.hypertext_link.config(text=link)
+        self.hypertext_link.bind("<Button-1>", lambda event: webbrowser.open(link))
+
+        self.hypertext_window.toplevel.update_idletasks()
+
+        width_dif = self.mainwindow.winfo_reqwidth() - self.hypertext_window.toplevel.winfo_reqwidth()
+        heigth_dif = self.mainwindow.winfo_reqheight() - self.hypertext_window.toplevel.winfo_reqheight()
+        pos_x = int(self.master.winfo_x() + width_dif / 2)
+        pos_y = int(self.master.winfo_y() + heigth_dif / 3)
+        self.hypertext_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
+
+        self.hypertext_window.run()
+
+    def close_hypertext_window(self, event=None):
+        self.hypertext_window.close()
 
 
 def main():

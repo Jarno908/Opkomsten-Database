@@ -1,9 +1,11 @@
 #! Python3
 
-#Database
-HOST = "remotemysql.com"
-PORT = 3306
-DATABASE_NAME = "dREfl7mPwv"
+# Version
+APP_VERSION = '0.2.0'
+APP_NAME = 'ScoutingDocumentenApp'
+APP_TITLE = APP_NAME + " V" + APP_VERSION
+
+GITHUB_REPO = 'Jarno908/Opkomsten-Database'
 
 # Sorting
 FORBIDDEN_CHARACTERS = '/\\?%*:|"<>'
