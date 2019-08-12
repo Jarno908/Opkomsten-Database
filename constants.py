@@ -1,7 +1,7 @@
 #! Python3
 
 # Version
-APP_VERSION = '0.2.0'
+APP_VERSION = '0.2.1'
 APP_NAME = 'ScoutingDocumentenApp'
 APP_TITLE = APP_NAME + " V" + APP_VERSION
 
