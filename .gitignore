@@ -1,10 +1,12 @@
-#Exclude all folders except Scripts
+#Exclude all folders except Essentials
 Templates/
 Test_Input/
 Test_Output/
 GUI/
 Resources/Images
 Builds/
+.pyupdater/
+pyu-data/
 
 #Exclude Python Cache folders
 **/__pycache__

@@ -17,6 +17,7 @@ from large_info_frame import InfoFrame
 from resources import ResourcePath
 import platform
 import webbrowser
+import constants
 
 class MyApplication:
 
@@ -39,7 +40,7 @@ class MyApplication:
         builder.connect_callbacks(self)
         self.master.protocol("WM_DELETE_WINDOW", self.quit)
         self.master.iconbitmap(str(self.reggegroep_icon))
-        self.master.title(self.model.config["Version"]["title"])
+        self.master.title(constants.APP_TITLE)
 
         self.mainwindow.update_idletasks()
 
@@ -68,8 +69,6 @@ class MyApplication:
         else:
             self.model.credentials_setup()
 
-        self.check_update()
-
     def quit(self, event=None):
         self.master.destroy()
 
@@ -92,7 +91,6 @@ class MyApplication:
 
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SearchDocuments, args=["opkomst", search_info, self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Zoeken")
@@ -142,7 +140,6 @@ class MyApplication:
     def download_button_pressed(self, idx):
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.download_files, args=[[self.current_documents[idx]], self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Downloaden")
@@ -182,7 +179,6 @@ class MyApplication:
             files_list.append(Path(file))
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[files_list, self.q])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Uploaden")
@@ -204,7 +200,6 @@ class MyApplication:
         file = Path(self.update_pathchooser.cget("path"))
         self.q = queue.Queue()
         self.thread1 = threading.Thread(target=self.model.SortDocuments, args=[[file], self.q, True])
-        self.thread1.daemon = True
         self.thread1.start()
 
         self.loading_window_setup("Updating")
@@ -342,18 +337,6 @@ class MyApplication:
         self.hypertext_link = self.builder.get_object("HyperText_Link")
         self.hypertext_button = self.builder.get_object("HyperText_Button")
         self.hypertext_button.config(command=self.close_hypertext_window)
-
-    def check_update(self):
-        os_name = platform.system()
-
-        if os_name == "Windows":
-            result = self.model.check_version()
-
-            self.hypertext_show("Nieuwe versie beschikbaar!", "Er is een nieuwe versie beschikbaar.\nDownloadlink:", result[1]["html_url"])
-        else:
-            result = self.model.check_version()
-
-            self.hypertext_show("Nieuwe versie beschikbaar!", "Er is een nieuw versie beschikbaar.\n\nDownloadlink:", result[1]["html_url"])
 
     def hypertext_show(self, title = "HyperText", message = "Dit is een link:", link = "www.google.com"):
 

@@ -1,5 +1,12 @@
 #! Python3
 
+# Version
+APP_VERSION = '0.2.0'
+APP_NAME = 'ScoutingDocumentenApp'
+APP_TITLE = APP_NAME + " V" + APP_VERSION
+
+GITHUB_REPO = 'Jarno908/Opkomsten-Database'
+
 # Sorting
 FORBIDDEN_CHARACTERS = '/\\?%*:|"<>'
 DOCUMENT_TYPES = {"O":"Opkomst"}

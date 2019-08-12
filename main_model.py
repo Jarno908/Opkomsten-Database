@@ -10,7 +10,6 @@ import pCloud_communications
 import database_communications
 import base64
 from resources import ResourcePath
-import version_updater
 
 #logging.disable(logging.DEBUG)
 
@@ -63,6 +62,7 @@ class MainModel():
         database_results = self.database_shell.insert_entries(upload_results[0])
         log.info("{} files failed to insert into database".format(len(database_results)))
         q.put([upload_results, database_results])
+        return
 
     def SearchDocuments(self, type, search_info, q):
         result = []
@@ -71,6 +71,7 @@ class MainModel():
             result = self.database_shell.get_opkomsten(search_info)
 
         q.put(result)
+        return
 
     def download_files(self, document_list, q):
         file_id_list = {}
@@ -81,6 +82,7 @@ class MainModel():
 
         results = self.pCloud_shell.download_files(file_id_list, self.config["Preferences"]["download_directory"])
         q.put(results)
+        return
 
     def SaveConfig(self):
         with open(str(self.personal_config_path), "w") as configfile:
@@ -98,8 +100,3 @@ class MainModel():
 
         self.pCloud_shell = pCloud_communications.pCloud_shell(self.credentials)
         self.database_shell = database_communications.database_shell(self.credentials)
-
-    def check_version(self):
-    	result = version_updater.check_new_version(self.config["Version"]["date"])
-
-    	return result
