@@ -1,10 +1,5 @@
 #! Python3
 
-#Database
-HOST = "remotemysql.com"
-PORT = 3306
-DATABASE_NAME = "dREfl7mPwv"
-
 # Sorting
 FORBIDDEN_CHARACTERS = '/\\?%*:|"<>'
 DOCUMENT_TYPES = {"O":"Opkomst"}

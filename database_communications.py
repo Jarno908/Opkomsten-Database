@@ -4,7 +4,6 @@ logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - 
 log = logging.getLogger(__name__)
 
 import pymysql.cursors
-import constants
 from opkomst_module import Opkomst
 
 class database_shell():
@@ -13,11 +12,11 @@ class database_shell():
         self.credentials = credentials
 
     def insert_entries(self, files):
-        connection = pymysql.connect(host=constants.HOST,
-                                     port=constants.PORT,
+        connection = pymysql.connect(host=self.credentials["database_host"],
+                                     port=int(self.credentials["database_port"]),
                                      user=self.credentials["database_username"],
                                      password=self.credentials["database_password"],
-                                     db=constants.DATABASE_NAME)
+                                     db=self.credentials["database_name"])
         connection.autocommit(True)
         failed_files = []
         for file in files:
@@ -45,11 +44,11 @@ class database_shell():
         return failed_files
 
     def get_opkomsten(self, search_info):
-        connection = pymysql.connect(host=constants.HOST,
-                                     port=constants.PORT,
+        connection = pymysql.connect(host=self.credentials["database_host"],
+                                     port=int(self.credentials["database_port"]),
                                      user=self.credentials["database_username"],
                                      password=self.credentials["database_password"],
-                                     db=constants.DATABASE_NAME)
+                                     db=self.credentials["database_name"])
 
         query = "SELECT * FROM opkomst_documents"
 
