@@ -58,9 +58,15 @@ class database_shell():
             if (value == "") or (value == "Alle"):
                 continue
             elif key == "search_string":
-                search_parts.append("(title LIKE CONCAT('%%', %s, '%%') OR description LIKE CONCAT('%%', %s, '%%') OR materials LIKE CONCAT('%%', %s, '%%') OR searchwords LIKE CONCAT('%%', %s, '%%'))")
-                for i in range(4):
-                    search_values.append(value)
+                words = value.split()
+                search_query_list = []
+                for word in words:
+                    search_query_list.append("title LIKE CONCAT('%%', %s, '%%') OR description LIKE CONCAT('%%', %s, '%%') OR materials LIKE CONCAT('%%', %s, '%%') OR searchwords LIKE CONCAT('%%', %s, '%%')")
+                    for i in range(4):
+                        search_values.append(word)
+
+                search_query = "(" + " OR ".join(search_query_list) + ")"
+                search_parts.append(search_query)
             elif key == "speltakken":
                 search_parts.append("speltakken LIKE CONCAT('%%', %s, '%%')")
                 search_values.append(value)
