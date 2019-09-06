@@ -77,6 +77,8 @@ class database_shell():
         if len(search_parts) > 0:
             query = query + " WHERE " + " AND ".join(search_parts)
 
+        query = query + " ORDER BY title"
+
         log.debug("Now retrieving with query: \n{}".format(query))
 
         try:
@@ -104,6 +106,7 @@ class database_shell():
 
         except Exception as e:
             log.debug(e)
+            result = []
 
         finally:
             connection.close()
