@@ -115,6 +115,8 @@ class MyApplication:
         pos_y = int(self.master.winfo_y() + heigth_dif / 3)
         self.items_window.toplevel.geometry("+{}+{}".format(pos_x, pos_y))
 
+        self.items_frame.config(width=800)
+
         self.items_frame.canvas.yview_moveto(0)
 
         self.items_window.run()

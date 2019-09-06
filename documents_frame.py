@@ -13,7 +13,8 @@ def DocumentsFrame(parent, items, display_method, download_method):
 
     if len(items) == 0:
         item_frame = ttk.Frame(parent, borderwidth=5)
-        ttk.Label(parent, text="Geen resultaten gevonden.").pack(fill=tk.BOTH, padx=20, pady=20)
+        ttk.Label(item_frame, text="Geen resultaten gevonden.").pack(fill=tk.BOTH, padx=20, pady=20)
+        item_frame.pack(fill=tk.X, padx=20)
     else:
         item_idx = 0
         for item in items:
